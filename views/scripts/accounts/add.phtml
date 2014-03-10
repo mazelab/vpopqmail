@@ -1,0 +1,62 @@
+<div class="cssContentMiddle grid_16">
+    <h1>
+        <?= $this->translate('create email account') ?>
+    </h1>
+    <div class="cssDetailPadding30 cssForm grid_16">
+        <div class="cssFormBoxLong grid_16">
+            <form action="<?= $this->url(array(), 'mazelab-vpopqmail_addaccount') ?>" method="post">
+                <dl class="grid_16 cssNewPopaccountRow1">
+                    <?= $this->form->user ?>
+                </dl>
+                <dl class="grid_16 cssNewPopaccountRow2">
+                    <?= $this->form->domainId ?>
+                </dl>
+                <dl class="grid_16">
+                    <?= $this->form->password ?>
+                </dl>
+                <dl class="grid_16">
+                    <?= $this->form->quota ?>
+                </dl>
+                <dl class="grid_16">
+                    <?= $this->form->status ?>
+                </dl>
+                <div class="grid_16 cssButtonSpace cssButtonNew">
+                    <input id="jsCancelButton" class="cssButton jsButton" type="reset" value="<?= $this->translate('cancel') ?>" />
+                    <input class="cssButton jsButton" type="submit" value="<?= $this->translate('save') ?>" />
+                </div>
+            </form>
+        </div>
+    </div>     
+</div>
+
+<?= $this->render('shared/passwordStrength.phtml'); ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.jsButton').button();
+        $(".selectFormMenu").selectmenu({
+            appendTo: "div.cssFormBoxLong",
+            style:'dropdown',
+            width:'196',
+            maxHeight: '400'
+        });
+        $('#jsCancelButton').click(function() {
+            location.href = '<?= $this->url(array(), 'mazelab-vpopqmail_accounts'); ?>';
+        })
+        $("form .jsEditable").bind('click', function() {
+            $(this).dblclick();
+        });
+        $("form").submit(function(){
+            $("#domainId").removeAttr("disabled");
+        });
+        $(".jsEditable").editable({
+            finishOnBlur: false
+        });
+    
+        $("#password").focus(function(){
+            $(this).click()
+        }).keyup(function(){
+            passwordStrength(this.value);
+        });
+});
+</script>

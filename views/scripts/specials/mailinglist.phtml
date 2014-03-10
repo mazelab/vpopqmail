@@ -1,0 +1,241 @@
+<div class="cssContentMiddle grid_16">
+    <h1><?= $this->translate('Mailinglist of') ?> <?= $this->html('mailingList/domainName') ?></h1>
+    <div class="cssDetailPadding30 cssForm grid_16">
+        <div class="cssFormBoxLong grid_16">
+            <form action="<?= $this->url(array($this->html('mailingList/label')), 'mazelab-vpopqmail_mailingList') ?>" method="post">
+
+                <dl class="grid_16 cssNewPopaccountRow1">
+                   <dt>
+                       <?= $this->translate('mailinglist for the account') ?>
+                   </dt>
+                   <dd>
+                       <?= $this->html("mailingList/label") ?>
+                   </dd>
+               </dl>
+               <h6>
+                   <?= $this->translate('is subscribed to by') ?>
+               </h6>   
+               <div id="jsSubscriberList" class="grid_16">
+                   <? foreach ($this->form->subscriber as $element): ?>
+                       <dl class="grid_16 jsSuberscriber cssEmailList">
+                           <?= $element; ?>
+                           <span class="ui-icon ui-icon-trash jsRemoveSubscriber cssIconTrash"></span>
+                       </dl>
+                   <? endforeach; ?>
+               </div>
+               <h7 class="grid_16">
+                   <?= $this->translate('add subscriber') ?>
+               </h7>
+               <dl class="grid_16 cssButton">
+                   <?= $this->form->addSubscriber ?>
+                   <input type="button" class="jsButton cssButtonForm jsAddSubscriber"
+                          value="<?= $this->translate('ok') ?>"/>
+               </dl>
+               <div id="subscriberTemplate" style="display:none;">
+                   <dl class="grid_16 jsSubscriber cssEmailList">
+                       <dt>
+                           <label><?= $this->translate('E-mail address:') ?></label>
+                       </dt>
+                       <dd>
+                           <span></span>
+                       </dd>
+                       <span class="ui-icon ui-icon-trash jsRemoveSubscriber cssIconTrash"></span>
+                   </dl>
+               </div>
+               <div class="cssDetailToolbar grid_16">
+                   <a <?= $this->toBool("mailingList/status") ? "style=\"display:none;\"" : null; ?>
+                      href="<?= $this->url(array($this->html("mailingList/label")), "mazelab-vpopqmail_specialsstate") ?>"
+                      class="jsIconStateTxt cssIconState inactive cssIconDetail" title="<?= $this->translate('activate') ?>">
+                      <?= $this->translate('activate mailing list') ?>
+                   </a>
+                   <a <?=!$this->toBool("mailingList/status") ? "style=\"display:none;\"" : null; ?>
+                      href="<?= $this->url(array($this->html("mailingList/label")), "mazelab-vpopqmail_specialsstate") ?>"
+                      class="jsIconStateTxt cssIconState cssIconDetail" title="<?= $this->translate('deactivate') ?>">
+                      <?= $this->translate('deactivate mailing list') ?>
+                   </a>
+                   <a href="<?= $this->url(array($this->html("mailingList/label")), "mazelab-vpopqmail_deleteSpecial") ?>"
+                      class="jsIconDeleteTxt cssIconDelete cssIconDetail" title="<?= $this->translate('delete') ?>">
+                      <?= $this->translate('delete mailing list') ?>
+                   </a>
+               </div>
+               <div id="jsConfirmDelete" style="display:none;">
+                   <?= $this->translate('Shall the special really be deleted?') ?>
+               </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    selectmenuOptions = {
+        appendTo: "div.cssFormBoxLong",
+        style:"dropdown",
+        width:"196",
+        maxHeight: "400"
+    };
+    
+    $(document).ready(function() {
+        initButtons();
+        $('.jsEditable').mazeEditable('<?= $this->url(array($this->html('mailingList/label')), 'mazelab-vpopqmail_mailingList') ?>?format=json', {
+            onsuccess: rebuildSubscriberList
+        });
+        
+        $(".selectFormMenu").selectmenu(selectmenuOptions);
+        $('#domainId').removeAttr('disabled');
+
+        $('form').submit(function() {
+            return false;
+        });
+        
+        $('#addSubscriber').keyup(function(e) {
+            if(e.which === 13) {
+                $(this).blur();
+                $('.jsAddSubscriber').click();
+            }
+            return false;
+        });
+
+        $('.jsRemoveSubscriber').live('click', function() {
+            var parent = $(this).closest('dl');
+            var post = $(parent).find('dd span[name]').attr('name') + '=';
+            
+            $.ajax({
+                url: "<?= $this->url(array($this->html('mailingList/label')), 'mazelab-vpopqmail_mailingList') ?>?format=json",
+                type: "post",
+                data: post,
+                success: function(data){
+                    rebuildSubscriberList(data);
+                }
+            });
+
+            return false;
+        });
+        
+        $('.jsAddSubscriber').click(function() {
+            resetTooltips();
+            if(!$('#addSubscriber').val()) {
+                return false;
+            }
+            
+            $.ajax({
+                url: "<?= $this->url(array($this->html('mailingList/label')), 'mazelab-vpopqmail_addMailingListSubscriber') ?>?format=json",
+                type: "post",
+                data: $('#addSubscriber').serialize(),
+                success: function(data){
+                    if (data.result === true && !$.isEmptyObject(data.subscribers)){
+                        rebuildSubscriberList(data);
+                        $('#addSubscriber').val('');
+                    } else if (!$.isEmptyObject(data.formErrors)){
+                        setErrorTooltip(data.formErrors, ".jsAddSubscriber");
+                    }
+                    
+                    setMessages(data);
+                    initButtons();
+                }
+            });
+
+            return false;
+        });
+        
+        $(".jsIconStateTxt").click(function(){
+            resetMessages();
+            self = $(this);
+            self.button("disable");
+            $.ajax({
+                url: this.href,
+                data: {format: "json"},
+                success:function(data){
+                    if (!$.isEmptyObject(data.special) && self.hasClass("inactive") === data.special.status){
+                        $(".jsIconStateTxt").toggle();
+                    }
+                    setMessages(data);
+                },
+                complete:function(){
+                    self.button("enable");
+                }
+            });
+            return false;
+        });
+
+        $(".jsIconDeleteTxt").click(function(){
+            self = $(this);
+            self.button("disable");
+
+            $("#jsConfirmDelete").dialog({
+                modal: true,
+                buttons : {
+                    "<?= $this->translate('ok') ?>" : function() {
+                        $.ajax({
+                            url: self.attr("href"),
+                            data: {format: "json"},
+                            success:function(data){
+                                if (data.status === true){
+                                    location.href = "<?= $this->url(array(), "mazelab-vpopqmail_specials") ?>";
+                                }
+                                self.button("enable");
+                                setMessages(data);
+                            }
+                        });
+                        $(this).dialog("close");
+                    },
+                    "<?= $this->translate('cancel') ?>" : function() {
+                        $(this).dialog("close");
+                        self.button("enable");
+                    }
+                }
+            });
+
+            return false;
+        });
+    });
+    
+    function initButtons() {
+        $('.jsButton').button();
+        $('.jsIconStateTxt').button({
+            icons: {
+                primary: 'ui-icon-circle-plus'
+            }
+        });
+        $('.jsIconStateTxt.inactive').button({
+            icons: {
+                primary: 'ui-icon-circle-minus'
+            }
+        });
+        $('.jsIconDeleteTxt').button({
+            icons: {
+                primary: 'ui-icon-circle-close'
+            }
+        });
+    }
+    
+    function rebuildSubscriberList(data){
+        if (!$.isEmptyObject(data.formErrors) && !$.isEmptyObject(data.formErrors.subscriber)){
+            for( id in data.formErrors.subscriber ) {
+                setErrorTooltip(data.formErrors.subscriber[id], $('span[name="subscriber[' +id+ ']"]'));
+            }
+
+            return false;
+        }
+
+        $('#jsSubscriberList').html('');
+        resetTooltips();
+
+        // build forwarder listing from scratch
+        if (typeof data.subscribers === "object"){
+            $.each(data.subscribers, function(subscriberId, subscriber){
+                var newTarget = $($("#subscriberTemplate").clone(false).html());
+
+                $(newTarget).find("dd span").html(subscriber).attr('name', "subscriber[" + subscriberId + "]");
+                $(newTarget).find("dd span").addClass('jsEditable').attr('id', "subscriber-" + subscriberId);
+                $(newTarget).appendTo("#jsSubscriberList");
+
+                $("#subscriber-" + subscriberId).mazeEditable($('form').attr('action') + "?format=json", {
+                    callback: rebuildSubscriberList
+                });
+            });
+
+            initButtons();
+        }
+    };
+</script>

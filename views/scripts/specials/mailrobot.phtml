@@ -1,0 +1,177 @@
+<div class="cssContentMiddle grid_16">
+    <h1><?= $this->translate('Mailrobot of') ?> <?= $this->html("mailRobot/domainName") ?></h1>
+    <div class="cssDetailPadding30 cssForm grid_16">
+        <div class="cssFormBoxLong grid_16">
+            <form action="<?= $this->url(array($this->html("mailRobot/label")), 'mazelab-vpopqmail_mailRobot') ?>" method="post">
+                
+                <dl class="grid_16 cssNewPopaccountRow1">
+                    <dt>
+                        <?= $this->translate('mailingrobot for the account') ?>
+                    </dt>
+                    <dd>
+                        <?= $this->html("mailRobot/label") ?>
+                    </dd>
+                </dl>
+                <p class="ui-icon ui-icon-info cssInfoText jsInfo"></p>
+                <h6>
+                    <?= $this->translate('Please enter your answer text') ?>
+                </h6>
+                <dl class="grid_16">
+                    <?= $this->form->copyTo ?>
+                </dl>
+                <dl class="grid_16 cssTextareaLong">
+                    <?= $this->form->content ?>
+                </dl>
+                <p class="jsInfoText" style="display:none;">
+                    <?= $this->translate('E-mails that are sent to the specified account, get an automatic reply using any text.') ?>
+                </p>
+                <div class="cssDetailToolbar grid_16">
+                    <a <?= $this->toBool("mailRobot/status") ? "style=\"display:none;\"" : null; ?>
+                       href="<?= $this->url(array($this->html("mailRobot/label")), "mazelab-vpopqmail_specialsstate") ?>"
+                       class="jsIconStateTxt cssIconState inactive cssIconDetail" title="<?= $this->translate('activate') ?>">
+                       <?= $this->translate('activate mail robot') ?>
+                    </a>
+                    <a <?= !$this->toBool("mailRobot/status") ? "style=\"display:none;\"" : null; ?>
+                       href="<?= $this->url(array($this->html("mailRobot/label")), "mazelab-vpopqmail_specialsstate") ?>"
+                       class="jsIconStateTxt cssIconState cssIconDetail" title="<?= $this->translate('deactivate') ?>">
+                       <?= $this->translate('deactivate mail robot') ?>
+                    </a>
+                    <a href="<?= $this->url(array($this->html("mailRobot/label")), "mazelab-vpopqmail_deleteSpecial") ?>"
+                       class="jsIconDeleteTxt cssIconDelete cssIconDetail" title="<?= $this->translate('delete') ?>">
+                       <?= $this->translate('delete mail robot') ?>
+                    </a>
+                </div>
+                <div id="jsConfirmDelete" style="display:none;">
+                    <?= $this->translate('Shall the special really be deleted?') ?>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        initButtons();
+        $(".selectFormMenu").selectmenu({
+            appendTo: "div.cssFormBoxLong",
+            style:'dropdown',
+            width:'196',
+            maxHeight: '400'
+        });
+        $('#domainId').removeAttr('disabled');
+        $('.jsEditable.textarea').mazeEditable('<?= $this->url(array($this->html('mailRobot/label')), 'mazelab-vpopqmail_mailRobot') ?>?format=json', {
+            type: "textarea"
+        });
+        $('.jsEditable').mazeEditable('<?= $this->url(array($this->html('mailRobot/label')), 'mazelab-vpopqmail_mailRobot') ?>?format=json');
+        $('.jsInfo').qtip({
+            content:{
+                text:$(this).find('.jsInfoText').html(),
+                title:{text:'Hinweis'}
+            },
+            show: {
+                solo: true,
+                when: {
+                    event: 'click'
+                }
+            },
+            hide: {
+                when: {
+                    event: 'unfocus'
+                }
+            },
+
+            style:{
+                width:{
+                    max:400,
+                    min:300
+                },
+                title:{
+                    background:'#1AA8C9',
+                    color:'#fff',
+                    'font-size': 14
+                },
+                background:'#E7F7F8',
+                color:'#3e3d3b',
+                border:{
+                    width:1,
+                    color:'#1AA8C9',
+                    radius:3
+                },
+                tip: { corner: 'topMiddle' }
+            },
+            position: { adjust: { x: -205, y: -5 } }
+        });
+
+        $(".jsIconStateTxt").click(function(){
+            resetMessages();
+            self = $(this);
+            self.button("disable");
+            $.ajax({
+                url: this.href,
+                data: {format: "json"},
+                success:function(data){
+                    if (!$.isEmptyObject(data.special) && self.hasClass("inactive") === data.special.status){
+                        $(".jsIconStateTxt").toggle();
+                    }
+                    setMessages(data);
+                },
+                complete:function(){
+                    self.button("enable");
+                }
+            });
+            return false;
+        });
+
+        $(".jsIconDeleteTxt").click(function(){
+            self = $(this);
+            self.button("disable");
+
+            $("#jsConfirmDelete").dialog({
+                modal: true,
+                buttons : {
+                    "<?= $this->translate('ok') ?>" : function() {
+                        $.ajax({
+                            url: self.attr("href"),
+                            data: {format: "json"},
+                            success:function(data){
+                                if (data.status === true){
+                                    location.href = "<?= $this->url(array(), "mazelab-vpopqmail_specials") ?>";
+                                }
+                                setMessages(data);
+                            },
+                            complete:function(){
+                                self.button("enable");
+                            }
+                        });
+                        $(this).dialog("close");
+                    },
+                    "<?= $this->translate('cancel') ?>" : function() {
+                        $(this).dialog("close");
+                        self.button("enable");
+                    }
+                }
+            });
+
+            return false;
+        });
+
+    });
+    
+    function initButtons() {
+        $('.jsIconStateTxt').button({
+            icons: {
+                primary: 'ui-icon-circle-plus'
+            }
+        });
+        $('.jsIconStateTxt.inactive').button({
+            icons: {
+                primary: 'ui-icon-circle-minus'
+            }
+        });
+        $('.jsIconDeleteTxt').button({
+            icons: {
+                primary: 'ui-icon-circle-close'
+            }
+        });
+    }
+</script>

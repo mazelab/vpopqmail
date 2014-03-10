@@ -1,0 +1,72 @@
+<div class="cssContentMiddle cssForm grid_16">
+    <h1>
+        <?= $this->translate('resolve differences') ?>
+    </h1>
+    <div class="grid_16 cssFormBoxLong">
+        <dl class="grid_16">
+            <dt><label><?= $this->translate('Email account') ?></label></dt>
+            <dd><span><?= $this->html('account/user') ?>@<?= $this->html('domain/name') ?></span></dd>
+        </dl>
+<!--        <dl class="grid_16">
+            <dt><label>Label:</label></dt>
+            <dd><span>Text</span></dd>
+        </dl>
+        <p>
+            Das ist Platzhalter für alle Informationen, die eventuell 
+            gebraucht werden könnten.
+            </br> 
+            Hier können mehrere Sachen stehen.
+        </p>-->
+    </div>
+    <div class="cssDetail cssForm grid_16">
+        <div class="cssFormBoxLong cssFormTwoColums grid_16">
+            <div class="grid_8 cssColumnLeft">
+                <div class="cssColumnLeftForm">
+                    <h6>
+                        <?= $this->translate('Current state on') ?> <?= $this->translate('Maze.dashboard') ?>
+                    </h6>
+                    <form  method="post">
+                        <div class="cssDiffContent">
+                            <dl class="grid_16">
+                                <?= $this->form->quota ?>
+                            </dl>
+                        </div>
+                        <div class="grid_16 cssButtonSpace cssButtonNew">
+                            <input class="cssButton jsButton" type="submit" value="<?= $this->translate('accept') ?>" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="grid_8 cssColumnRight">
+                <div class="cssColumnRightForm">
+                    <input name="remoteForm" type="hidden" value="true"/>
+                    <h6>
+                        <?= $this->translate('Current state on') ?> <?= $this->translate('Live system') ?>
+                    </h6>
+                    <form class="" action="" method="post">
+                        <div class="cssDiffContent">
+                            <dl class="grid_16">
+                                <?= $this->formRemote->quota ?>
+                            </dl>
+                        </div>
+                        <div class="grid_16 cssButtonSpace cssButtonNew">
+                            <input class="cssButton jsButton" type="submit" value="<?= $this->translate('accept') ?>" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.jsButton').button();
+        $(".selectFormMenu").selectmenu({
+            appendTo: "div.cssFormBoxLong",
+            style:'dropdown',
+            width:'196',
+            maxHeight: '400'
+        });
+    });
+</script>

@@ -1,0 +1,75 @@
+<div id="emailConfig">
+    <form id="emailConfigCatchAll"  action="<?= $this->url(array(), 'mazelab-vpopqmail_config') ?>" method="post">
+        <div class="row-fluid">
+            <h5 class="row-fluid"><?= $this->translate("General Catch-all Settings"); ?></h5>
+            <p>
+                <?= $this->translate('E-mails to unknown users will be') ?>
+            </p>            
+            <div id="emailConfigCatchAllBounce" class="row-fluid">
+                <label class="checkbox">
+                    <input type="radio" name="selectedBehavior" disabled="disabled" value=""
+                           />
+                           <?= $this->translate('Bounce') ?>
+                </label>
+            </div>
+            <div id="emailConfigCatchAllDelete" class="row-fluid">
+                <label class="checkbox">
+                    <input type="radio" name="selectedBehavior"
+                           value="<?= MazelabVpopqmail_Model_CatchAllManager::CATCH_ALL_BEHAVIOR_DELETE ?>"
+                           <? if ($this->form->selectedBehavior->getValue() == MazelabVpopqmail_Model_CatchAllManager::CATCH_ALL_BEHAVIOR_DELETE): ?>
+                               checked="checked"
+                           <? endif; ?>
+                           />
+                           <?= $this->translate('deleted') ?>
+                </label>
+            </div>
+            <dl id="emailConfigCatchAllEmail" class="row-fluid">
+                <dt class="span3">
+                    <label class="checkbox">
+                        <input type="radio" name="selectedBehavior"
+                               value="<?= MazelabVpopqmail_Model_CatchAllManager::CATCH_ALL_BEHAVIOR_SEND_TO_EMAIL ?>"
+                               <? if ($this->form->selectedBehavior->getValue() == MazelabVpopqmail_Model_CatchAllManager::CATCH_ALL_BEHAVIOR_SEND_TO_EMAIL): ?>
+                                   checked="checked"
+                               <? endif; ?>
+                               />
+                               <?= $this->translate('dispatched to email address') ?>
+                    </label>
+                </dt>
+                <dd class="span9">
+                    <?= $this->form->sendToEmail->renderViewHelper() ?>
+                    <?= $this->form->sendToEmail->renderErrors() ?>
+                </dd>
+            </dl>
+        </div>
+        <div class="row-fluid">
+            <input id="emailConfigCatchAllSubmit" class="btn btn-info"
+                   type="submit" value="<?= $this->translate('save') ?>" />
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#emailConfigCatchAll").submit(function() {
+            resetAllMessages();
+            self = $(this);
+            data = self.serializeArray();
+            
+            $.ajax({
+                url: $(this).attr('action') + '?format=json',
+                type: $(this).attr('method'),
+                data: data,
+                success: function(data) {
+                    if(data.result === true) {
+                        data.successes.push("<?= $this->translate('Changes have been saved') ?>");
+                        setTimeout(function(){
+                            resetTooltips();
+                        }, 5000);
+                    }
+                    setTooltips(data, "#emailConfigCatchAllSubmit");
+                }
+            });
+            return false;
+        });
+    });
+</script>

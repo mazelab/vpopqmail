@@ -1,0 +1,401 @@
+<div class="cssToolBar cssForm grid_16">
+    <div class="cssSearch grid_8 jsPagerSearchDiv">
+        <dl class="grid_16">
+            <dt>
+                <label><?= $this->translate("Search"); ?></label>
+            </dt>
+            <dd>
+                <input id="searchInput" type="text" class="cssSearchInput jsPagerSearch"/>
+            </dd>
+        </dl>
+    </div>
+    <div class="cssPager">
+        <a class="cssPagerInfo jsQtipPager"
+           <?= $this->html('pager/total') != ""?  null : "style='display:none'" ?>>
+            <span class="jsPagerPosition">
+                <?= $this->html('pager/position') ?>
+            </span>
+            <span>
+                -    
+            </span>
+            <span class="jsPagerLastPosition">
+                <?= $this->html('pager/lastPosition') ?>
+            </span>
+            <span>
+                <?= $this->translate("from"); ?>
+            </span>
+            <span class="jsPagerTotal">
+                <?= $this->html('pager/total') ?>
+            </span>
+        </a>
+        <div class="jsQtipPagerContent" style="display:none;">
+            <ul class="cssQtipPager">
+                <li>
+                    <a class="jsPagerButton jsPagerFirst">
+                        <?= $this->translate("to Start"); ?>
+                    </a>
+                </li>
+                <li>
+                    <a class="jsPagerButton jsPagerLast">
+                        <?= $this->translate("to End"); ?>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <a id="pagerPrev" class="jsIconPrev jsPagerButton jsPagerPrev">
+            <?= $this->translate("back"); ?>
+        </a>
+        <a id="pagerNext" class="jsIconNext jsPagerButton jsPagerNext">
+            <?= $this->translate("next"); ?>
+        </a>
+    </div>
+    <div class="jsPagerTemplateNoResults grid_16" style="display:none;">
+        <li>
+            <div>
+                <span>
+                    <?= $this->translate('Your search did not return any results') ?>
+                </span>
+            </div>
+        </li>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        initPagerButton();
+        initPagerButtonEvents();
+        
+        // pager first init
+        $('#pagerPrev').button('disable');
+        <? if($this->html('pager/total') <= $this->html('pager/limit')): ?>
+        $('#pagerNext').button('disable');
+        <? endif; ?>
+        
+        $('#searchInput').mazeSearch({
+            target : "#pagerContent",
+            onLoad: function() {
+                resetTooltips();
+            },
+            onRender: function() {
+                var total = parseInt(this.options.total);
+                var page = parseInt(this.options.page);
+                var limit = parseInt(this.options.limit);
+                
+                var start = (page * limit - limit + 1);
+                var end = (start + limit - 1);
+
+                if (page === 1) {
+                    $('#pagerPrev').button('disable');
+                } else {
+                    $('#pagerPrev').button('enable');
+                }
+                
+                if(total <= end) {
+                    $('#pagerNext').button('disable');
+                } else {
+                    $('#pagerNext').button('enable');
+                }
+                
+                $('.jsPagerTotal').text(total);
+                $('.jsPagerPosition').text(start);
+                $('.jsPagerLastPosition').text(this.options.lastPosition);
+            }
+        });
+        
+        $('.jsQtipPager').qtip({
+            content: {
+                text: $('.jsQtipPagerContent').html()
+            },
+            show: {
+                solo: true,
+                when: {
+                    event: 'click'
+                }
+            },
+            hide: {
+                when: {
+                    event: 'unfocus'
+                }
+            },
+            style: {
+                background: '#fff',
+                padding: '0',
+                color: '#ccc',
+                width: {
+                    max: 100,
+                    min: 100
+                },
+                border: {
+                    width: 1,
+                    color: '#ccc'
+                }
+            },
+            position: {
+                corner: {
+                    target: 'bottomLeft',
+                    tooltip: 'topLeft'
+                }
+            },
+            api: {
+                onRender: function() {
+                    initPagerButtonEvents();
+                }
+            }
+        });
+    });
+    
+    function initPagerButton() {
+        $('.jsIconNext').button({
+            icons: {
+                primary: 'ui-icon-triangle-1-e'
+            },
+            text: false
+        });
+        $('.jsIconPrev').button({
+            icons: {
+                primary: 'ui-icon-triangle-1-w'
+            },
+            text: false
+        });
+    }
+    
+    function initPagerButtonEvents() {
+        $('.jsPagerFirst').off('click').click(function() {
+            $('.jsQtipPager').qtip("hide");
+            $('#searchInput').mazeSearch('first');
+            return false;
+        });
+        
+        $('.jsPagerLast').off('click').click(function() {
+            $('.jsQtipPager').qtip("hide");
+            $('#searchInput').mazeSearch('last');
+            return false;
+        });
+        
+        $('#pagerNext').off('click').click(function() {
+            if($(this).attr('aria-disabled') === 'false') {
+                $('#searchInput').mazeSearch('next');
+            }
+            return false;
+        });
+        
+        $('#pagerPrev').off('click').click(function() {
+            if($(this).attr('aria-disabled') === 'false') {
+                $('#searchInput').mazeSearch('prev');
+            }
+            return false;
+        });
+        
+        $('.jsPagerButton').click(function() {
+            if($(this).attr('aria-disabled') === 'false') {
+                $('#pagerPrev, #pagerNext').button('disable');
+            }
+            return false;
+        });
+    }
+    
+   (function($) {
+        $.fn.mazeSearch = function(param, key, val) {
+            if (methods[param]) {
+                return methods[param].apply(this, [key, val]);
+            } else if (param && typeof param !== 'object') {
+                return false;
+            }
+
+            var options = $.extend({}, $.fn.mazeSearch.defaults, param);
+            if(!options.source || !options.target) {
+                return false;
+            }
+            
+            return this.each(function() {
+                if(this.tagName.toLowerCase() !== 'input') {
+                    return false;
+                }
+                var self = this;
+                self.options = options;
+
+                $(self).keyup(function(e) {
+                    e.preventDefault();
+                    
+                    if($(self).val() === self.options.term) {
+                        return false;
+                    }
+                    self.options.term = $(self).val();
+                    
+                    if(self.options.minLength && $.isNumeric(self.options.minLength)
+                            && self.options.term.length < parseInt(self.options.minLength)) {
+                        return false;
+                    }
+                    
+                    self.options.page = '1';
+                    self.options.action = 'page';
+                    
+                    if(self.xhr) {
+                        self.xhr.abort();
+                    }
+
+                    if(!self.options.delay || !$.isNumeric(self.options.delay)) {
+                        load(self);
+                    } else {
+                        setTimeout(function() {
+                            load(self);
+                        }, self.options.delay);
+                    }
+                });
+                
+                if(self.options.autoload === true) {
+                    self.options.page = '1';
+                    self.options.action = 'page';
+                    load(self);
+                }
+            });
+        };
+        
+        /**
+         * loads search via ajax
+         * 
+         * @param {object} self
+         * @returns {undefined}
+         **/
+        function load(self) {
+            var data = {};
+            
+            if(self.options.action) {
+                data['pagerAction'] = self.options.action;
+            }
+            if(self.options.term) {
+                data['term'] = self.options.term;
+            }
+            if(self.options.page) {
+                data['page'] = self.options.page;
+            }
+            if(self.options.limit) {
+                data['limit'] = self.options.limit;
+            }
+            
+            self.xhr = $.ajax({
+                url: self.options.source,
+                dataType: "html",
+                data: data,
+                success: function(data) {
+                    if(typeof self.options.onLoad === 'function') {
+                        self.options.onLoad.apply(self, [data]);
+                    }
+                    
+                    render(self, data);
+                },
+                error: function() {
+                    if(typeof self.options.onError === 'function') {
+                        self.options.onError.apply(self);
+                    }
+                }
+            });
+        }
+        
+        /**
+         * renders ajax return
+         *
+         * @param {type} self
+         * @param {type} data
+         * @returns {undefined}         */
+        function render(self, data) {
+            $(self.options.target).html(data);
+            
+            if(typeof self.options.onRender === 'function') {
+                self.options.onRender.apply(self, [data]);
+            }
+        }
+        
+        var methods = {
+            /**
+             * load actual page
+             */
+            current: function() {
+                return this.each(function() {
+                    load(this);
+                });
+            },  
+            /**
+             * load first page
+             */
+            first: function() {
+                return this.each(function() {
+                    this.options.action = 'page';
+                    this.options.page = '1';
+                    load(this);
+                });
+            },            
+            /**
+             * load last page
+             */
+            last: function() {
+                return this.each(function() {
+                    this.options.action = 'last';
+                    this.options.page = '';
+                    load(this);
+                });
+            },
+            /**
+             * load next page
+             */
+            next: function() {
+                return this.each(function() {
+                    this.options.action = 'page';
+                    
+                    if(this.options.page) {
+                        this.options.page++;
+                    } else {
+                        this.options.page = 2;
+                    }
+                    load(this);
+                });
+            },            
+            /**
+             * load next page
+             */
+            prev: function() {
+                return this.each(function() {
+                    if(this.options.page && this.options.page > 2) {
+                        this.options.action = 'page';
+                        this.options.page--;
+                    } else {
+                        this.options.action = 'page';
+                        this.options.page = '1';
+                    }
+                    load(this);
+                });
+            },
+            /**
+             * get or set options
+             */
+             option: function(key, val) {
+                return this.each(function() {
+                    if(key && typeof val !== 'undefined') {
+                        this.options[key] = val;
+                        return true;
+                    }
+                    if(key) {
+                        return this.options[key];
+                    }
+                    
+                    return this.options;
+                });
+             }
+        };
+        
+        $.fn.mazeSearch.defaults = {
+            action: 'first',
+            delay: '20',
+            minLength: '',
+            source: 'search?format=html',
+            target: '#mainContent',
+            term: '',
+            page: '',
+            limit: '10',
+            autoload: false,
+            onLoad: {},
+            onRender: {},
+            onError: {}
+        };
+    })(jQuery);
+</script>

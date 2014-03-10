@@ -1,0 +1,65 @@
+<div class="cssDashboardModule grid_16">
+    <div class="cssToolBox">
+        <div class="cssToolboxHead">
+            <img src="<?= $this->baseUrl() ?>/img/icon_service.png" title="Module">
+            <span class="cssDashboardBoxHead">
+                <?= $this->translate('Service email management') ?>
+            </span>
+        </div>
+        <ul class="cssToolBoxContent ">
+            <li class="grid_16">
+                <div class="grid_4"><?= $this->translate('mail quota in MB') ?></div>
+                <div class="grid_11">
+                    <? if($this->html('config/quota') != ""): ?>
+                    <div id="progressbar"
+                         class=" ui-progressbar ui-widget ui-widget-content ui-corner-all" 
+                         role="progressbar" aria-valuemin="0" aria-valuemax="80" aria-valuenow="20">
+                        <div class="ui-progressbar-value ui-widget-header ui-corner-left" 
+                            style="min-width:5%; width:<?= $this->html('quotaInPercent') .'%' ?>;">
+                            <span><?= $this->html('quotaUsed') ?></span>
+                        </div>
+                        <div class="cssProgressbarRight">
+                            <span><?= $this->html('config/quota') ?></span>
+                        </div>
+                    </div>
+                    <? else: ?>
+                    <div id="progressbar"
+                         class=" ui-progressbar ui-widget ui-widget-content ui-corner-all unlimited" 
+                         role="progressbar" aria-valuemin="0" aria-valuemax="80" aria-valuenow="20">
+                        <div class="ui-progressbar-value ui-widget-header ui-corner-left unlimited">
+                            <span><?= $this->html('quotaUsed') ?> | <?= $this->translate('unlimited'); ?></span>
+                        </div>
+                    </div>
+                    <? endif; ?>
+                </div>
+            </li>
+            <li class="grid_16">
+                <div class="grid_4"><?= $this->translate('Email accounts') ?></div>
+                <div class="grid_11">
+                    <? if($this->html('config/countAccounts') != ""): ?>
+                    <div id="progressbar" 
+                         class=" ui-progressbar ui-widget ui-widget-content ui-corner-all" 
+                         role="progressbar" aria-valuemin="0" aria-valuemax="80" aria-valuenow="20">
+
+                        <div class="ui-progressbar-value ui-widget-header ui-corner-left" 
+                             style="min-width:5%; width:<?= $this->html('accoountsInPercent') . '%' ?>; ">
+                            <span><?= $this->html('accountsUsed') ?></span>
+                        </div>
+                        <div class="cssProgressbarRight">
+                            <span><?= $this->html('config/countAccounts') ?></span>
+                        </div>
+                    </div>
+                    <? else: ?>
+                    <div id="progressbar"
+                         class="ui-progressbar ui-widget ui-widget-content ui-corner-all unlimited" 
+                         role="progressbar" aria-valuemin="0" aria-valuemax="80" aria-valuenow="20">
+                        <div class="ui-progressbar-value ui-widget-header ui-corner-left unlimited">
+                            <span><?= $this->html('accountsUsed') ?> | <?= $this->translate('unlimited'); ?></span>
+                        </div>
+                    </div>
+                    <? endif; ?>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

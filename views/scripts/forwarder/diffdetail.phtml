@@ -1,0 +1,123 @@
+<div class="cssContentMiddle cssForm grid_16">
+    <h1>
+        <?= $this->translate('resolve differences') ?>
+    </h1>
+    <div class="grid_16 cssFormBoxLong">
+        <dl class="grid_16">
+            <dt><label><?= $this->translate('Forwarder') ?></label></dt>
+            <dd><span><?= $this->html('forwarder/label') ?></span></dd>
+        </dl>
+    </div>
+        
+    <div class="cssDetail cssForm grid_16">
+        <form method="post">
+            <div id="diffTargets" class="cssFormBoxLong cssFormTwoColums grid_16">
+                <div class="grid_8 cssColumnLeft">
+                    <div class="cssColumnLeftForm" id="jsDiffColumnRemote">
+                        <h6>
+                            <?= $this->translate('Current state on') ?> <?= $this->translate('Maze.dashboard') ?>
+                        </h6>
+                        <div class="cssDiffContent">
+                            <p><?= $this->translate('will be forwarded to') ?></p>
+                        <? foreach ($this->form->local as $element): ?>
+                            
+                            <dl class="grid_16">
+                                <?= $element ?>
+                            </dl>
+                        <? endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid_8 cssColumnRight">
+                    <div class="cssColumnRightForm">
+                        <h6>
+                            <?= $this->translate('Current state on') ?> <?= $this->translate('Live system') ?>
+                        </h6>
+                        <div class="cssDiffContent">
+                            <p><?= $this->translate('will be forwarded to') ?></p>
+                        <? foreach ($this->form->remote as $element): ?>
+                            
+                            <dl class="grid_16">
+                                <?= $element ?>
+                            </dl>                   
+                        <? endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="changeLog" class="grid_16 cssFormBoxLong cssFormOneColum jsChangeLog" style="display:none;">
+                <h6><?= $this->translate('New State') ?></h6>
+                <ul id="changesTargets" class="cssFont cssDiffChanges grid_16 jsLineColor">
+                </ul>
+            </div>
+            <input class="jsButton" type="submit" value="<?= $this->translate('accept') ?>"/>
+        </form>
+    </div>
+            
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.jsButton').button();
+        $(".selectFormMenu").selectmenu({
+            appendTo: "div.cssFormBoxLong",
+            style:'dropdown',
+            width:'196',
+            maxHeight: '400'
+        });
+
+        function toggleChangeLog(){
+            if ($("#diffTargets [type=checkbox]:checked").length > 0 || $("#changeLog li").length){
+                $(".jsChangeLog").show();
+            }else{
+                $(".jsChangeLog").hide();
+            }
+        }
+ 
+        function initTargetListCss() {
+            $('ul.jsLineColor li:even').removeClass('One Two').addClass('cssLine Two');
+            $('ul.jsLineColor li:odd').removeClass('Two One').addClass('cssLine One');
+            toggleChangeLog();
+        }
+
+        function appendChanges(element){
+            var email = element.val();
+            if (element.attr("checked") === "checked"){
+                var li = $('<li></li>');
+                $(li).html(email).addClass('add');
+
+                $('#changesTargets').append(li);
+            } else {
+                $("#changesTargets li").filter(function() {
+                    return $.trim($(this).text()) === email;
+                }).remove();
+            }
+
+            $("[id=" +element.parent().attr("id")+ "]").each(function(index, element){
+                $(element).closest("dl").toggleClass("add");
+            });
+
+            initTargetListCss();
+        }
+
+        $('#diffTargets input[type=checkbox]').click(function() {
+            appendChanges($(this));
+        }).filter(":checked").each(function(){
+            appendChanges($(this));
+        });
+  
+        $("#diffTargets [status=del]").each(function(){
+            $(this).closest("dl").addClass("del");
+        });
+
+        $("#jsDiffColumnRemote dl").each(function(){
+            if ($(this).hasClass("del") === false && $(this).find("label").length){
+                $('#changesTargets').append($("<li />", {
+                    html: $(this).find("label").text()
+                }));
+            }
+        });
+ 
+        initTargetListCss();
+    });
+</script>

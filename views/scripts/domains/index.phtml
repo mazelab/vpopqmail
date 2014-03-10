@@ -1,0 +1,110 @@
+<div class="cssContentMiddle grid_16">
+    <h1 class="grid_16">
+        <?= $this->translate('All domains of client') ?>
+        <? if($this->html('client/company') != ''): ?>
+            <?= $this->html('client/company') ?>
+        <? else: ?>
+            <?= $this->html('client/prename') ?> <?= $this->html('client/surname') ?>
+        <? endif; ?>
+    </h1>
+    <div class="cssListing cssForm grid_16">
+        <div class="grid_16 alpha omega cssHeaderList">
+            <div class="grid_16 alpha omega cssAction">
+                <h3>
+                    <?= $this->translate('actions') ?>
+                </h3>
+            </div>
+        </div>
+        
+        <ul class="grid_16 cssFormBoxLong">
+            <? foreach($this->domains as $id => $domain): ?>
+                <li class="grid_16 alpha omega">
+                    <div class="grid_16 cssDomainList ">
+                        <div class="grid_10 alpha omega jsDomain">
+                            <span class=" ui-icon ui-icon-triangle-1-e"></span>
+                            <a href="#" class="grid_16 cssDomain ">
+                                <?= $domain->html('name') ?>
+                            </a>
+                        </div>
+                        <div class="grid_6 alpha omega cssAction">
+                            <a href="<?= $this->url(array(), 'mazelab-vpopqmail_accounts') ?>?domainFilter=<?= $id; ?>"
+                               class="jsIconEmail cssIconEmail cssIcon" 
+                               title="<?= $this->translate('edit email accounts') ?>">
+                                <?= $this->translate('Email accounts') ?>
+                            </a>
+                            <a href="<?= $this->url(array(), 'mazelab-vpopqmail_forwarder') ?>?domainFilter=<?= $id; ?>"
+                               class="jsIconForwarder cssIconForwarder cssIcon" 
+                               title="<?= $this->translate('edit forwarder') ?>">
+                                <?= $this->translate('Forwarder') ?>
+                            </a>
+                            <a href="<?= $this->url(array(), 'mazelab-vpopqmail_specials') ?>?domainFilter=<?= $id; ?>"
+                               class="jsIconSpecials cssIconSpecials cssIconLAst" 
+                               title="<?= $this->translate('edit specials') ?>">
+                                <?= $this->translate('Specials') ?>
+                            </a>
+                        </div>
+                        <div class="grid_10 cssDomainInfo jsDomainInfo" style="display:none;">
+                            <dl class="grid_16">
+                                <dt>
+                                    <label><?= $this->translate('incoming mail server') ?></label>
+                                </dt>
+                                <dd>
+                                    <span><?= $domain->html("emailConfig/incomingMailServer") != ""
+                                            ? $domain->html("emailConfig/incomingMailServer") : "-" ?></span>
+                                </dd>
+                            </dl>
+                            <dl class="grid_16">
+                                <dt>
+                                    <label><?= $this->translate('outgoing mail server') ?></label>
+                                </dt>
+                                <dd>
+                                    <span><?= $domain->html("emailConfig/outgoingMailServer") != ""
+                                            ? $domain->html("emailConfig/outgoingMailServer") : "-" ?></span>
+                                </dd>
+                            </dl>
+                            <dl class="grid_16">
+                                <dt>
+                                    <label><?= $this->translate('Catch-all') ?></label>
+                                </dt>
+                                <dd>
+                                    <span><?= $this->translate((string) $domain->html("catchAll/behavior")) ?></span>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </li>
+            <? endforeach; ?>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $( ".jsDomain" ).click(function() {
+            $(this).closest("li").find(".jsDomainInfo").toggle();
+            $(this).closest("li").find(".jsDomain span").toggleClass( "ui-icon-triangle-1-s", 0 );
+            return false;
+        });
+        
+        $('.jsButton').button();
+        
+        $('.jsIconEmail').button({
+            icons: {
+                primary: 'ui-icon-mail-closed'
+            },
+            text: true
+        });
+        $('.jsIconForwarder').button({
+            icons: {
+                primary: 'ui-icon-arrowreturnthick-1-e'
+            },
+            text: true
+        });
+        $('.jsIconSpecials').button({
+            icons: {
+                primary: 'ui-icon-gear'
+            },
+            text: true
+        });
+
+    });
+</script>

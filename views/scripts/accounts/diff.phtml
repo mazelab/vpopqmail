@@ -1,0 +1,42 @@
+<div class="cssContentMiddle cssDifferences grid_16">
+    <h1 class="grid_16">
+         <?= $this->translate('differences from all accounts') ?>
+    </h1>
+    <div class="cssListing grid_16">
+        <ul>
+            <? foreach($this->conflictsInDomains as $domainName => $conflicts): ?>
+            <h4>
+                <?= $domainName ?>
+            </h4>
+                <? foreach($conflicts as $email => $context): ?>
+                <li class="grid_16 alpha omega">
+                    <div class="grid_10 alpha omega">
+                        <a href="<?= $this->url(array($email), 'mazelab-vpopqmail_diffAccountDetail') ?>"
+                           title="<?= $this->translate('resolve differences') ?>">
+                            <?= $email ?>
+                        </a>
+                    </div>
+                    <div class="grid_6 alpha omega cssAction">
+                        <a href="<?= $this->url(array($email), 'mazelab-vpopqmail_diffAccountDetail') ?>"
+                           title="<?= $this->translate('resolve differences') ?>"
+                           class="jsIconDiff cssIconDiff cssIconLast">
+                            <?= $this->translate('resolve differences') ?>
+                        </a>
+                    </div>
+                </li>
+                <? endforeach; ?>
+            <? endforeach; ?>
+        </ul>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.jsIconDiff').button({
+            icons: {
+                primary: 'ui-icon-wrench'
+            },
+            text: true
+        });
+    });
+</script>

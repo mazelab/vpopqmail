@@ -1,0 +1,78 @@
+<? foreach($this->html('pager/data') as $special): ?>
+<li pagerindex="<?= $special->html('pagerIndex') ?>"
+    class="grid_16 alpha omega">
+    <div class="grid_10 alpha omega">
+        <span class="grid_2 cssAvatar">
+            <img src="<?= $this->baseUrl() ?>/img/dummy_icon_50.png" alt="<?= $this->translate('avatar') ?>"/>
+            <span class="cssAvatarText">
+            <? if ($special->html('type') == MazelabVpopqmail_Model_SpecialsManager::CATCH_ALL): ?>
+                <?= $this->translate('Catch-all') ?>
+             <? elseif ($special->html('type') == MazelabVpopqmail_Model_SpecialsManager::MAILING_LIST): ?>
+                <?= $this->translate('Lists') ?>
+            <? elseif ($special->html('type') == MazelabVpopqmail_Model_SpecialsManager::MAIL_ROBOT): ?>
+                <?= $this->translate('Robots') ?>
+             <? endif; ?>
+            </span>
+        </span>
+        <a class="grid_14" title="<?= $this->translate('edit') ?>"
+            <? if ($special->html('type') == MazelabVpopqmail_Model_SpecialsManager::CATCH_ALL): ?>
+                href="<?= $this->url(array($special->html('domainName')), 'mazelab-vpopqmail_editCatchAll');?>">
+                <?= $this->translate('Catch-all') ?>
+             <? elseif ($special->html('type') == MazelabVpopqmail_Model_SpecialsManager::MAILING_LIST): ?>
+                href="<?= $this->url(array($special->html('label')), 'mazelab-vpopqmail_mailingList');?>">
+                <?= $special->html('label') ?>
+            <? elseif ($special->html('type') == MazelabVpopqmail_Model_SpecialsManager::MAIL_ROBOT): ?>
+                href="<?= $this->url(array($special->html('label')), 'mazelab-vpopqmail_mailRobot');?>">
+                <?= $special->html('label') ?>
+             <? endif; ?>
+        </a>
+    </div>
+    <div class="grid_6 alpha omega cssAction">
+        <? if($special->html('type') == MazelabVpopqmail_Model_SpecialsManager::CATCH_ALL): ?>
+        <a  class="jsIconEdit cssIconEdit cssIconLast" 
+            href="<?= $this->url(array($special->html('domainName')), 'mazelab-vpopqmail_editCatchAll');?>"
+            title="<?= $this->translate('edit') ?>">
+            <?= $this->translate('edit') ?>
+        </a>
+        <? else: ?>
+        <a href="<?= $this->url(array($special->html('label')), 'mazelab-vpopqmail_specialsstate') ?>"
+           class="jsIconState jsChangeState cssIconState cssIcon jsPagerStateDeactivate"
+           <?= !$special->toBool("status/local") ? "style='display:none;'" : null; ?>
+           title="<?= $this->translate('deactivate') ?>">
+        </a>
+        <a href="<?= $this->url(array($special->html('label')), 'mazelab-vpopqmail_specialsstate') ?>"
+           class="jsIconState jsChangeState inactive cssIconState cssIcon jsPagerStateActivate"
+           <?= $special->toBool("status/local") ? "style='display:none;'" : null; ?>
+           title="<?= $this->translate('activate') ?>">
+        </a>
+        
+        <a  class="jsIconEdit cssIconEdit cssIcon" 
+            <? if ($special->html('type') == MazelabVpopqmail_Model_SpecialsManager::MAILING_LIST): ?>
+                href="<?= $this->url(array($special->html('label')), 'MazelabVpopqmail_mailingList');?>"
+            <? elseif ($special->html('type') == MazelabVpopqmail_Model_SpecialsManager::MAIL_ROBOT): ?>
+                href="<?= $this->url(array($special->html('label')), 'mazelab-vpopqmail_mailRobot');?>"
+            <? endif; ?>
+            title="<?= $this->translate('edit') ?>">
+            <?= $this->translate('edit') ?>
+        </a>
+        
+        <a href="<?= $this->url(array($special->html('label')), 'mazelab-vpopqmail_deleteSpecial');?>"
+            class="jsIconDelete cssIconDelete cssIconLast" 
+            title="<?= $this->translate('delete') ?>">
+            <?= $this->translate('delete') ?>
+        </a>
+        <? endif; ?>
+    </div>
+</li>
+<? endforeach ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        initButtons();
+        
+        $('#searchInput').mazeSearch('option', 'page', '<?= $this->html('pager/page') ?>');
+        $('#searchInput').mazeSearch('option', 'total', '<?= $this->html('pager/total') ?>');
+        $('#searchInput').mazeSearch('option', 'limit', '<?= $this->html('pager/limit') ?>');
+        $('#searchInput').mazeSearch('option', 'lastPosition', '<?= $this->html('pager/lastPosition') ?>');
+    });
+</script>

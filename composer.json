@@ -1,0 +1,5 @@
+{
+    "name": "mazelab\/vpopqmail",
+    "description": "Module to configure a Vpopmail + Qmail node",
+    "version" : "1.0.0"
+}

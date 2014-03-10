@@ -1,0 +1,41 @@
+<div class="cssContentMiddle grid_16">
+    <h1>
+        <?= $this->translate('create special') ?>
+    </h1>
+    <div class="cssDetailPadding30 cssForm grid_16">
+        <div class="cssFormBoxLong grid_16">
+            <form action="<?= $this->url(array(), 'mazelab-vpopqmail_addspecial') ?>" method="post">
+                <dl class="grid_16">
+                    <?= $this->form->domainId ?>
+                </dl>
+                <dl class="grid_16">
+                    <?= $this->form->type ?>
+                </dl>
+                <div class="grid_16 cssButtonSpace cssButtonNew">
+                    <input id="jsCancelButton" class="cssButton jsButton"
+                           type="reset" value="<?= $this->translate('cancel') ?>" />
+                    <input class="cssButton jsButton" type="submit"
+                           value="<?= $this->translate('more') ?>" />
+                </div>
+            </form>
+        </div>
+    </div>     
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.jsButton').button();
+        $("form").submit(function(){
+            $("#domainId").removeAttr("disabled");
+        });
+        $('#jsCancelButton').click(function() {
+            location.href = '<?= $this->url(array(), 'mazelab-vpopqmail_specials'); ?>';
+        });
+        
+        $(".selectFormMenu").selectmenu({
+            appendTo: "div.cssFormBoxLong",
+            style:'dropdown',
+            width:'196',
+            maxHeight: '400'
+        });
+    });
+</script>

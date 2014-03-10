@@ -1,0 +1,284 @@
+<div class="cssContentMiddle grid_16">
+    <h1><?= $this->translate('Forwarder') ?> <?= $this->html('forwarder/label') ?></h1>
+    <div class="cssDetailPadding30 cssForm grid_16">
+        <div class="cssFormBoxLong grid_16">
+            <dl class="grid_16">
+                <dt><?= $this->translate('E-mail address:') ?></dt>
+                <dd><?= $this->html('forwarder/label') ?></dd>
+            </dl>
+            <h6>
+                <?= $this->translate('will be forwarded to') ?>
+            </h6>    
+            <form action="<?= $this->url(array($this->html('forwarder/label')), 'mazelab-vpopqmail_forwarderdetail') ?>" method="post">
+                <div id="jsForwarderTargets">
+                    <? foreach ($this->form->forwardTo as $element): ?>
+                        <dl class="grid_16 jsForwarder cssEmailList">
+                            <?= $element; ?>
+                            <span class="ui-icon ui-icon-trash jsDeleteTarget cssIconTrash"></span>
+                        </dl>
+                    <? endforeach; ?>
+                </div>
+                <h7 class="grid_12"><?= $this->translate('add Forwarding') ?></h7>
+                
+                <dl class="grid_16 cssButton" id="jsAddForwarder">
+                    <?= $this->form->addForward ?>
+                    <input class="jsButton cssButtonForm jsAddForwarderButton" type="submit" value="<?= $this->translate('ok') ?>" /> 
+                </dl>
+                <dl class="grid_16 cssButton">
+                    <?= $this->form->accounts ?>
+                    <input class="jsButton cssButtonForm" type="submit" value="<?= $this->translate('ok') ?>" />
+                </dl>
+            </form>
+        </div>
+        <div id="jsForwarderTemplate" style="display:none;">
+            <dl class="grid_16 jsForwarder cssEmailList">
+                <dt id="forwardTo-ID-label">
+                    <label><?= $this->translate('E-mail address:') ?></label>
+                </dt>
+                <dd id="forwardTo-ID-element">
+                    <span id="forwardTo-ID" name="forwardTo[ID]"></span>
+                </dd>
+                <span class="ui-icon ui-icon-trash jsDeleteTarget cssIconTrash"></span>
+            </dl>
+        </div>
+    </div>
+    <div class="cssDetailToolbar grid_16">
+        <a <?= $this->toBool("forwarder/status") ? "style=\"display:none;\"" : null; ?>
+           href="<?= $this->url(array($this->html("forwarder/label")), "mazelab-vpopqmail_forwarderstate") ?>"
+           class="jsIconStateTxt cssIconState inactive cssIconDetail" title="<?= $this->translate('activate') ?>">
+           <?= $this->translate('activate forwarder') ?>
+        </a>
+        <a <?= !$this->toBool("forwarder/status") ? "style=\"display:none;\"" : null; ?>
+           href="<?= $this->url(array($this->html("forwarder/label")), "mazelab-vpopqmail_forwarderstate") ?>"
+           class="jsIconStateTxt cssIconState cssIconDetail" title="<?= $this->translate('deactivate') ?>">
+           <?= $this->translate('deactivate forwarder') ?>
+        </a>
+        <a href="<?= $this->url(array($this->html("forwarder/label")), "mazelab-vpopqmail_deleteForwarder") ?>"
+           class="jsIconDeleteTxt cssIconDelete cssIconDetail" title="<?= $this->translate('delete') ?>">
+           <?= $this->translate('delete forwarder') ?>
+        </a>
+    </div>
+</div>
+<div id="jsConfirmDelete" style="display:none;">
+    <?= $this->translate('Shall the forwarder really be deleted?') ?>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('.jsIconStateTxt').button({
+            icons: {
+                primary: 'ui-icon-circle-plus'
+            }
+        });
+        $('.jsIconStateTxt.inactive').button({
+            icons: {
+                primary: 'ui-icon-circle-minus'
+            }
+        });
+        $('.jsIconDeleteTxt').button({
+            icons: {
+                primary: 'ui-icon-circle-close'
+            }
+        });
+        selectmenuOptions = {
+            appendTo: "div.cssFormBoxLong",
+            style:"dropdown",
+            width:"196",
+            maxHeight: "400"
+        };
+
+        $("#accounts").selectmenu(selectmenuOptions).change(function(){
+            $("#addForward").val(null);
+        });
+ 
+        $("#addForward").keyup(function(){
+            $("#accounts").selectmenu("value", "");
+        }).change(function(){
+			$("#accounts").selectmenu("value", "");
+		});
+        
+        $('.jsDeleteTarget').live('click', function() {
+            var parent = $(this).closest(".jsForwarder");
+            var post = $(parent).find('span[name]').attr('name') + '=';
+
+            resetAllMessages();
+            $.ajax({
+                url: "<?= $this->url(array($this->html('forwarder/label')), 'mazelab-vpopqmail_forwarderdetail') ?>?format=json",
+                type: "post",
+                data: post,
+                success: function(data){
+                    if (data.result === true){
+                        parent.remove();
+                    }
+                    setMessages(data);
+                }
+            });
+
+            return false;
+        });
+    
+        $("form").submit(function(){
+            var self = $(this);
+            var mail = ($("#addForward").val() || $("#accounts").selectmenu("value"));
+
+            resetAllMessages();
+			if (mail === "" || !isValid(mail, ".jsAddForwarderButton")){
+				return false;
+			}
+
+            $.ajax({
+                url: "<?= $this->url(array($this->html('forwarder/label')), 'mazelab-vpopqmail_addForwarderTarget') ?>?format=json",
+                type: "post",
+                data: {addForward: mail},
+                success: function(data){
+                    if (typeof data === "object"){
+                        if (data.result === true){
+                            self.find("#addForward").val(null);
+                            $("#accounts option[value='"+ mail +"']").remove();
+                            $("#accounts").val("").selectmenu("destroy").selectmenu(selectmenuOptions);
+                            disableSelectbox("#accounts", "<?= $this->translate('no email account available') ?>");
+                            rebuildForwardTargets(data);
+                        }else if (!$.isEmptyObject(data.formErrors)){
+                            setErrorTooltip(data.formErrors);
+                        }
+                    }
+
+                    handleErrors(data);
+                }
+            });
+
+            return false;
+        });
+
+        $(".jsIconStateTxt").click(function(){
+            resetMessages();
+            self = $(this);
+            self.button("disable");
+            $.ajax({
+                url: this.href,
+                data: {format: "json"},
+                success:function(data){
+                    if (!$.isEmptyObject(data.forwarder) && self.hasClass("inactive") === data.forwarder.status){
+                        $(".jsIconStateTxt").toggle();
+                    }
+                    setMessages(data);
+                },
+                complete:function(){
+                    self.button("enable");
+                }
+            });
+            return false;
+        });
+
+        $(".jsIconDeleteTxt").click(function(){
+            self = $(this);
+            self.button("disable");
+
+            $("#jsConfirmDelete").dialog({
+                modal: true,
+                buttons : {
+                    "<?= $this->translate('ok') ?>" : function() {
+                        $.ajax({
+                            url: self.attr("href"),
+                            data: {format: "json"},
+                            success:function(data){
+                                if (data.status === true){
+                                    location.href = "<?= $this->url(array(), "mazelab-vpopqmail_forwarder") ?>";
+                                }
+                                self.button("enable");
+                                setMessages(data);
+                            }
+                        });
+                        $(this).dialog("close");
+                    },
+                    "<?= $this->translate('cancel') ?>" : function() {
+                        $(this).dialog("close");
+                        self.button("enable");
+                    }
+                }
+            });
+
+            return false;
+        });
+
+        function initButtons() {
+            $('.jsButton').button();
+        };
+
+        function isValid(email, selector) {
+			var disallow = /^[\x2e\x25\x26\x2d\x2f]/;
+			if (disallow.test(email)) {
+				setErrorTooltip("<?= $this->translate('The characters .-,%&/are not allowed at the beginning') ?>", selector);
+				return false;
+			}
+
+			var emailReg = /^([a-zA-Z0-9_\x21\x23\x27\x2b\x2d\x3d\x3f\x5e\x5f\x60\x7b\x7d\x7e\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+            var target = $("#jsForwarderTargets dd").filter(function() {
+                return $.trim($(this).text().toLowerCase()) === email.toLowerCase();
+            });
+            
+            if(!email || !emailReg.test(email)) {
+                setErrorTooltip("<?= $this->translate("'%value%' is not a valid email address in the basic format local-part@hostname") ?>".replace("%value%", email), selector);
+                return false;
+            }
+
+            if ($(target).length > 0) {
+                setErrorTooltip("<?= $this->translate("Account %value% allready exists") ?>".replace("%value%", email), selector);
+                return false;
+            }
+            
+            return true;
+        };
+
+        function handleErrors(data){
+            if ($.isEmptyObject(data.formErrors) === false){
+                if (!$.isEmptyObject(data.formErrors.forwardTo)){
+                    for(var id in data.formErrors.forwardTo) {
+                        setErrorTooltip(data.formErrors.forwardTo[id], "#forwardTo-"+ id);
+                    }
+                }
+                return false;
+            }
+
+            setMessages(data);
+        };
+ 
+        function rebuildForwardTargets(data){
+            // build forwarder listing from scratch
+            if (typeof data.forwardTo === "object"){
+                $("#jsForwarderTargets").html(null);
+                for(target in data.forwardTo){
+                    var entry = $($("#jsForwarderTemplate").clone(false).html());
+                    entry.find("dd span").addClass("jsEditable").text(data.forwardTo[target]);
+                    entry = entry[0].outerHTML.replace(new RegExp("ID", "g"), target);
+                    $(entry).appendTo("#jsForwarderTargets");
+                }
+            }
+
+            initButtons();
+            $(".jsEditable").mazeEditable("<?= $this->url(array($this->html('forwarder/label')), "mazelab-vpopqmail_forwarderdetail") ?>?format=json",  {
+                onsuccess: rebuildForwardTargets
+            });
+
+            return false;
+        };
+        
+        function disableSelectbox(selectbox, message) {
+            selectbox = $(selectbox);
+
+            if (selectbox.find("option[value]").length === 1 && selectbox.find("option[value]").get(0).value === ""){
+                option = selectbox.selectmenu("option");
+
+                if (typeof message !== "undefined"){
+                    selectbox.get(0).options[0].text = message;
+                    selectbox.selectmenu("destroy").selectmenu(option).selectmenu("disable");
+                }else{
+                    selectbox.selectmenu("disable");
+                }
+            }
+        }
+
+        rebuildForwardTargets([]);
+
+    });
+</script>

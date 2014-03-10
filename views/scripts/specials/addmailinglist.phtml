@@ -1,0 +1,178 @@
+<div class="cssContentMiddle grid_16">
+    <h1><?= $this->translate('Mailinglist of') ?> <?= $this->html('domain/name') ?></h1>
+    <div class="cssDetailPadding30 cssForm grid_16">
+        <div class="cssFormBoxLong grid_16">
+            <form action="<?= $this->url(array($this->html('domain/name')), 'mazelab-vpopqmail_addMailingList') ?>" method="post">
+                <dl class="grid_16 cssNewPopaccountRow1">
+                    <?= $this->form->user ?>
+                </dl>
+                <dl class="grid_16 cssNewPopaccountRow2">
+                    <?= $this->form->domainId ?>
+                </dl>
+                <dl class="grid_16">
+                    <?= $this->form->status ?>
+                </dl>
+                <h6>
+                    <?= $this->translate('is subscribed to by') ?>
+                </h6>   
+                <div id="jsSubscriberList" class="grid_16">
+                    <? foreach ($this->form->subscriber as $element): ?>
+                        <dl class="grid_16 jsSuberscriber cssEmailList">
+                            <?= $element; ?>
+                            <span class="ui-icon ui-icon-trash jsRemoveSubscriber cssIconTrash"></span>
+                        </dl>
+                    <? endforeach; ?>
+                </div>
+                <h6>
+                    <?= $this->translate('add subscriber') ?>
+                </h6>
+                <dl class="grid_16 cssButton">
+                    <?= $this->form->addSubscriber ?>
+                    <input type="button" class="jsButton cssButtonForm jsAddSubscriber"
+                           value="<?= $this->translate('ok') ?>"/>
+                </dl>
+                <div id="subscriberTemplate" style="display:none;">
+                    <dl class="grid_16 jsSubscriber cssEmailList">
+                        <dt>
+                            <label><?= $this->translate('E-mail address:') ?></label>
+                        </dt>
+                        <dd>
+                            <span></span>
+                        </dd>
+                        <span class="ui-icon ui-icon-trash jsRemoveSubscriber cssIconTrash"></span>
+                    </dl>
+                </div>
+
+                <div class="grid_16 cssButtonSpace cssButtonNew">
+                    <input class="cssButton jsButton" id="jsCancelButton" type="reset"
+                           value="<?= $this->translate('cancel') ?>" />
+                    <input class="cssButton jsButton" type="submit"
+                           value="<?= $this->translate('save') ?>" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        selectmenuOptions = {
+            appendTo: "div.cssFormBoxLong",
+            style:"dropdown",
+            width:"196",
+            maxHeight: "400"
+        };
+
+        function initButtons() {
+            $('.jsButton').button();
+        }
+
+        function isValid(email, selector) {
+            var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+            var subscriber = $("#jsSubscriberList span").filter(function() {
+                return $.trim($(this).text()) === email;
+            });
+            
+            if(!email || !emailReg.test(email)) {
+                setErrorTooltip("<?= $this->translate("'%value%' is not a valid email address in the basic format local-part@hostname") ?>".replace("%value%", email), selector);
+                return false;
+            }
+
+            if ($(subscriber).length > 0) {
+                setErrorTooltip("<?= $this->translate("Subscriber allready enlisted") ?>".replace("%value%", email), selector);
+                return false;
+            }
+            
+            return true;
+        }
+
+        function initEditable() {
+            $("form .jsEditable").each(function() {
+                $(this).editable(function(val){return val;},{
+                    cancel: '<button class="jsButton buttons ui-icon ui-icon-close jsEditableCancel" type="submit" value="abbrechen"/>',
+                    submit: '<button class="jsButton buttons ui-icon ui-icon-disk" type="submit" value="speichern"/>',
+                    onsubmit: function (obj, span) {
+                        var val = $.trim($(span).find('form input').val());
+
+                        resetTooltips();
+                        if(!val) {
+                            $(span).closest('dl').remove();
+                            return false;
+                        }
+                    
+                    if(!isValid(val, span)) {
+                            return false;
+                        }
+
+                        return true;
+                    }
+                }).click(function() {
+                    $(this).find('.jsButton').button();
+                });
+            });
+        }
+
+        $('.jsRemoveSubscriber').live('click', function() {
+            $(this).closest('dl').remove();
+            return false;
+        });
+
+        $('#addSubscriber').keypress(function(e) {
+            if(e.keyCode === 13) {
+                $('.jsAddSubscriber').click();
+                e.preventDefault(); 
+            }
+        });
+        $('#jsCancelButton').click(function() {
+            location.href = '<?= $this->url(array(), 'mazelab-vpopqmail_specials'); ?>';
+        });
+
+        $('.jsAddSubscriber').click(function() {
+            var newTarget = $($("#subscriberTemplate").clone(false).html());
+            var val = $.trim($('#addSubscriber').val());
+            
+            resetTooltips();
+            if(!isValid(val, '.jsAddSubscriber')) {
+                return false;
+            }
+            
+            $(newTarget).find("dd span").html(val).attr('name', "subscriber[]");
+            $(newTarget).find("dd span").addClass('jsEditable').attr('id', "subscriber-" + val);
+            $(newTarget).appendTo("#jsSubscriberList");
+            $('#addSubscriber').val(null).focus();
+ 
+            initEditable()
+            initButtons();
+            return false;
+        });
+
+        // build hidden inputs from jeditable fields
+        $('form').submit(function() {
+            $('.jsEditable').each(function() {
+                var input = $("<input type='hidden'/>");
+
+                $(this).find(".jsEditableCancel").click();
+                $(input).attr('name', $(this).attr('name'));
+                $(input).attr('value', $(this).html());
+                
+                $(input).appendTo("#jsSubscriberList");
+            });
+        }).click(function(event){
+            if(event.target.nodeName.toLowerCase() === "button" ||
+                    event.target.nodeName.toLowerCase() === "input"){
+                return event;
+            }
+
+            if($(this).find('.jsEditable form').length > 0){
+                $(this).find('.jsEditable form').find("button.ui-icon-close").click();
+            }
+            resetTooltips();
+        });
+        
+        $(".selectFormMenu").selectmenu(selectmenuOptions);
+        $('#domainId').removeAttr('disabled');
+
+        initButtons();
+        initEditable();
+    });
+</script>

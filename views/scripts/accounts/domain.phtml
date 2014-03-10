@@ -1,0 +1,207 @@
+<div class="cssContentMiddle grid_16">
+    <div class="cssDomainFilter">
+        <span><?= $this->translate('active filter') ?><b><?= $this->html('domain/name') ?></b></span>
+        <a href="<?= $this->url(array(), 'mazelab-vpopqmail_accounts') ?>" id="jsUnsetDomainFilter">
+            <?= $this->translate('remove filter') ?>
+        </a>
+    </div>
+    <h1 class="grid_16">
+        <?= $this->translate('Email accounts of') ?> <?= $this->html('domain/name') ?>
+        
+        <a class="cssDifferences jsDifferences" href="<?= $this->url(array(), 'mazelab-vpopqmail_diffDomainaccounts') ?>"
+        <? if(!count($this->conflicts)): ?>
+           style="display:none;"
+        <? endif; ?>
+            >
+            <span class="jsCountDifferences">
+                <?= count($this->conflicts) ?>
+            </span>
+            <?= $this->translate('differences') ?>
+        </a>
+    </h1>
+    <?= $this->render('shared/searchfield.phtml'); ?>
+    <div class="cssListing grid_16">
+        <div class="grid_16 alpha omega cssHeaderList">
+            <div class="grid_10 alpha omega">
+                <div class="cssButtonNew grid_10">
+                    <a class="jsButton" 
+                       title="<?= $this->translate('create new email account') ?>"
+                       href="<?= $this->url(array(), 'mazelab-vpopqmail_addaccount') ?>?domainId=<?=$this->html('domainId');?>">
+                        <?= $this->translate('create new email account') ?>
+                    </a>
+                </div>
+            </div>
+            <div class="grid_6 alpha omega cssAction">
+                <h3><?= $this->translate('actions') ?></h3>
+            </div>
+        </div>
+        <ul id="pagerContent" class="jsListAccounts">
+            <?= $this->render('accounts/domain.ajax.phtml') ?>
+        </ul>
+        <div id="jsConfirmDelete" style="display:none;">
+            <?= $this->translate('Shall the email account really be deleted?') ?>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#searchInput').mazeSearch('option', 'source', "<?= $this->url(array(), 'mazelab-vpopqmail_accounts') ?>?format=html");
+        
+        $('#jsConfirmDelete').dialog({
+            autoOpen: false,
+            modal: true
+        });
+        
+        $("#jsUnsetDomainFilter").click(function(){
+            document.cookie = "domainId=; expires=" + new Date(0).toGMTString() +";";
+            window.location = window.location.pathname;
+            return false;
+        });
+        
+        $('a.jsChangeState').live('click', function() {
+            var li = $(this).closest('li');
+            
+            $.ajax({
+                url: $(this).attr('href') + '?format=json',
+                success: function(data) {
+                    if(data.conflictedUrl) {
+                        var counter = parseInt($('.jsCountDifferences').html());
+                        
+                        $(li).find('a[href]').unbind('click');
+                        $(li).find('a[href]').removeAttr('href');
+                        $(li).addClass('cssDiffList');
+                        $(li).find('a.jsAccountDetail').attr('href', data.conflictedUrl);
+                        
+                        // add to counter
+                        $('.jsCountDifferences').html(counter + 1);
+                        $('.jsDifferences').show();
+                    };
+                    
+                    if(data.account.status === true) {
+                        $(li).find('.jsPagerStateDeactivate').show();
+                        $(li).find('.jsPagerStateActivate').hide();
+                    } else {
+                        $(li).find('.jsPagerStateActivate').show();
+                        $(li).find('.jsPagerStateDeactivate').hide();
+                    }
+                    setTooltips(data, li);
+                }
+            });
+            
+            return false;
+        });
+        
+        $('a.jsDeleteAccount').live('click', function() {
+            var elem = this;
+
+            resetTooltips();
+            $('#jsConfirmDelete').dialog({
+                buttons : {
+                    "<?= $this->translate('ok') ?>" : function() {
+                        $.ajax({
+                            url: $(elem).attr('href') + '?format=json',
+                            success: function(data) {
+                                if(data.status === true) {
+                                    setMessages(data);
+                                } else {
+                                    setTooltips(data, elem);
+                                }
+                            }
+                        });
+                        
+                        $(this).dialog("close");
+                    },
+                    "<?= $this->translate('cancel') ?>" : function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            
+            $("#jsConfirmDelete").dialog("open");
+            return false;
+        });
+        
+    });
+
+    function initForwarderQtip() {
+        $('.jsForwarderListing').each(function() {
+            $(this).click(function() {return false;});
+            if($(this).find('.jsForwarderContent li').length <= 0) {
+                return true;
+            }
+            $(this).qtip({
+                content:{
+                    text:$(this).find('.jsForwarderContent').html(),
+                    title:{text:'<?= $this->translate('Account receives the following forwarders') ?>'}
+                },
+                show: {
+                    solo: true,
+                    when: {
+                        event: 'click'
+                    }
+                },
+                hide: {
+                    when: {
+                        event: 'unfocus'
+                    }
+                },
+
+                style:{
+                    width:{
+                        max:400,
+                        min:300
+                    },
+                    title:{
+                    background:'#1AA8C9',
+                    color:'#fff',
+                    'font-size': 14
+                    },
+                    background:'#E7F7F8',
+                    color:'#3e3d3b',
+                    border:{
+                        width:1,
+                        color:'#1AA8C9',
+                        radius:3
+                    },
+                    tip: { corner: 'topMiddle' }
+                },
+                position: { adjust: { x: -180, y: -15 } }
+            });
+        });
+    }
+    
+    function initButtons() {
+        $('.jsButton').button();
+        $('.jsIconTrash').button({
+            icons: {
+                primary: 'ui-icon-trash'
+            },
+            text: true
+        });
+        $('.jsIconEdit').button({
+            icons: {
+                primary: 'ui-icon-pencil'
+            },
+            text: false
+        });
+        $('.jsIconState').button({
+            icons: {
+                primary: 'ui-icon-circle-check'
+            },
+            text: false
+        });
+        $('.jsIconState.inactive').button({
+            icons: {
+                primary: 'ui-icon-circle-minus'
+            },
+            text: false
+        });
+        $('.jsIconDelete').button({
+            icons: {
+                primary: 'ui-icon-circle-close'
+            },
+            text: false
+        });
+    }
+
+</script>

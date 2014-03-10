@@ -1,0 +1,96 @@
+<? $domains = array(); ?>
+<? foreach($this->html('pager/data') as $forwarder): ?>
+
+<? if(array_search((string)$forwarder->html('domainName'), $domains) === false): ?>
+<h4>
+    <?= $forwarder->html('domainName') ?>
+</h4>
+<? array_push($domains, (string)$forwarder->html('domainName')); ?>
+<? endif; ?>
+
+<li pagerindex="<?= $forwarder->html('pagerIndex') ?>"
+    <? if($this->toBool("conflicts/" . $forwarder->html('label'))): ?>
+    class="grid_16 alpha omega cssDiffList">
+    <? else: ?>
+    class="grid_16 alpha omega">
+    <? endif; ?>
+    <div class="grid_10 alpha omega">
+        <a class="jsAccountDetail grid_16" title="<?= $this->translate('edit') ?>"
+            <? if($this->toBool("conflicts/" . $forwarder->html('label'))): ?>
+            href="<?= $this->url(array($forwarder->html('label')), 'mazelab-vpopqmail_diffForwarderDetail') ?>">
+            <? else: ?>
+            href="<?= $this->url(array($forwarder->html('label')), 'mazelab-vpopqmail_forwarderdetail') ?>">
+            <? endif; ?>
+            <?= $forwarder->html('label') ?>
+        </a>
+    </div>
+    <div class="grid_6 alpha omega cssAction">
+        <a class="jsForwardToListing cssAdditionalLink"
+            title="<?= $this->translate('show email addresses') ?>">
+            <?= $this->translate('Email addresses') ?> (<?= count($forwarder->html('forwardTo')) ?>)
+            <? if(count($forwarder->html('forwardTo')) > 0): ?>
+            <div class="jsForwardToContent" style="display:none;">
+                <ul class="cssQtip">
+                    <? foreach($forwarder->html('forwardTo') as $forwardTo): ?>
+                    <li>
+                        <?= $forwardTo->html('local') ?>
+                    </li>
+                    <? endforeach; ?>
+                <ul>
+            </div>
+            <? endif; ?>
+        </a>
+
+        <? if($this->toBool("conflicts/" . $forwarder->html('label'))): ?>
+
+        <a class="jsIconState cssIconState cssIcon"
+           <?= !$forwarder->toBool("status/local") ? "style='display:none;'" : null; ?>
+           title="<?= $this->translate('deactivate') ?>">
+        </a>
+        <a class="jsIconState inactive cssIconState cssIcon"
+           <?= $forwarder->toBool("status/local") ? "style='display:none;'" : null; ?>
+           title="<?= $this->translate('activate') ?>">
+        </a>
+        <a class="jsIconEdit cssIconEdit cssIcon"
+           title="<?= $this->translate('edit') ?>">
+        </a>
+        <a class="jsIconDelete cssIconDelete cssIconLast"
+           title="<?= $this->translate('delete') ?>">
+        </a>
+
+        <? else: ?>
+
+        <a href="<?= $this->url(array($forwarder->html('label')), 'mazelab-vpopqmail_forwarderstate') ?>"
+           class="jsIconState jsChangeState cssIconState cssIcon jsPagerStateDeactivate"
+           <?= !$forwarder->toBool("status/local") ? "style='display:none;'" : null; ?>
+           title="<?= $this->translate('deactivate') ?>">
+        </a>
+        <a href="<?= $this->url(array($forwarder->html('label')), 'mazelab-vpopqmail_forwarderstate') ?>"
+           class="jsIconState jsChangeState inactive cssIconState cssIcon jsPagerStateActivate"
+           <?= $forwarder->toBool("status/local") ? "style='display:none;'" : null; ?>
+           title="<?= $this->translate('activate') ?>">
+        </a>
+        <a href="<?= $this->url(array($forwarder->html('label')), 'mazelab-vpopqmail_forwarderdetail') ?>"
+           class="jsIconEdit cssIconEdit cssIcon"
+           title="<?= $this->translate('edit') ?>">
+        </a>
+        <a href="<?= $this->url(array($forwarder->html('label')), 'mazelab-vpopqmail_deleteForwarder') ?>"
+           class="jsIconDelete jsDeleteAccount cssIconDelete cssIconLast"
+           title="<?= $this->translate('delete') ?>">
+        </a>
+        <? endif; ?>
+    </div>
+</li>
+<? endforeach; ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        initForwarderTargetsQtip();
+        initButtons();
+        
+        $('#searchInput').mazeSearch('option', 'page', '<?= $this->html('pager/page') ?>');
+        $('#searchInput').mazeSearch('option', 'total', '<?= $this->html('pager/total') ?>');
+        $('#searchInput').mazeSearch('option', 'limit', '<?= $this->html('pager/limit') ?>');
+        $('#searchInput').mazeSearch('option', 'lastPosition', '<?= $this->html('pager/lastPosition') ?>');
+    });
+</script>
