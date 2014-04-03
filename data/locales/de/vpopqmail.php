@@ -120,6 +120,12 @@
         'forwarder %1$s is conflicted! Please resolve all conflicts before proceeding.' => 'Weiterleitung %1$s enthält einen Konflikt! Bitte lösen Sie alle Konflikte bevor Sie fortfahren.',
         'email account %1$s is conflicted! Please resolve all conflicts before proceeding.' => 'Postfach %1$s enthält einen Konflikt! Bitte lösen Sie alle Konflikte bevor Sie fortfahren.',
 
+        'In order to view or edit this account you have to login as the client' => 'Um das Postfach bearbeiten oder anschauen zu können müssen Sie sich als Mandant anmelden',
+        'In order to view or edit this catch-all you have to login as the client' => 'Um den Catch-All bearbeiten oder anschauen zu können müssen Sie sich als Mandant anmelden',
+        'In order to view or edit this forwarder you have to login as the client' => 'Um die Weiterleitung bearbeiten oder anschauen zu können müssen Sie sich als Mandant anmelden',
+        'In order to view or edit this mailing list you have to login as the client' => 'Um die Mailing-Listen bearbeiten oder anschauen zu können müssen Sie sich als Mandant anmelden',
+        'In order to view or edit this mail robot you have to login as the client' => 'Um die Mail-Robots bearbeiten oder anschauen zu können müssen Sie sich als Mandant anmelden',
+
         'activate account' => 'Postfach aktivieren',
         'deactivate account' => 'Postfach deaktivieren',
         'delete account' => 'Postfach löschen',

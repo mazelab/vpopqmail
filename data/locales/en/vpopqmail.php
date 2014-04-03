@@ -120,6 +120,12 @@
         'forwarder %1$s is conflicted! Please resolve all conflicts before proceeding.' => 'forwarder %1$s is conflicted! Please resolve all conflicts before proceeding.',
         'email account %1$s is conflicted! Please resolve all conflicts before proceeding.' => 'email account %1$s is conflicted! Please resolve all conflicts before proceeding.',
 
+        'In order to view or edit this account you have to login as the client' => 'In order to view or edit this account you have to login as the client',
+        'In order to view or edit this catch-all you have to login as the client' => 'In order to view or edit this catch-all you have to login as the client',
+        'In order to view or edit this forwarder you have to login as the client' => 'In order to view or edit this forwarder you have to login as the client',
+        'In order to view or edit this mailing list you have to login as the client' => 'In order to view or edit this mailing list you have to login as the client',
+        'In order to view or edit this mail robot you have to login as the client' => 'In order to view or edit this mail robot you have to login as the client',
+        
         'activate account' => 'Activate account',
         'deactivate account' => 'Deactivate account',
         'delete account' => 'Delete account',
