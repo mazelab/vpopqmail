@@ -129,9 +129,9 @@ class MazelabVpopqmail_Form_Account extends Zend_Form
 
         foreach ($forwardersNotPresent as $forwarderId => $forwarder) {
             $this->getElement('forwarders')->setOption($forwarderId, $forwarder->getEmail(), array(
-                'rel' => $this->getView()->url(array($forwarder->getEmail()), "MazelabVpopqmail_addForwarderTarget"),
+                'rel' => $this->getView()->url(array($forwarder->getEmail()), "mazelab-vpopqmail_addForwarderTarget"),
                 'ref' => 'forwardTo[' . md5($account->getEmail()) .  ']',
-                'href' => $this->getView()->url(array($forwarder->getEmail()), 'MazelabVpopqmail_forwarderdetail')
+                'href' => $this->getView()->url(array($forwarder->getEmail()), 'mazelab-vpopqmail_forwarderdetail')
             ));
         }
 
