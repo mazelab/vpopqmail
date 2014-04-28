@@ -4,7 +4,8 @@
         'Email' => 'E-Mail',
 
         'Email accounts' => 'Postfächer',
-        'Forwarder' => 'Forwarder',
+        'Forwarder' => 'Weiterleitung',
+        'Forwarders' => 'Weiterleitungen',
         'Specials' => 'Specials',
 
         'Shall the email account really be deleted?' => 'Soll das Postfach wirklich gelöscht werden?',
@@ -76,10 +77,10 @@
         'register Robot' => 'Mailrobot registrieren:',
         'register Account' => 'Postfach registrieren:',
 
-        'add subscription to forwarders' => 'Abonnement für Forwarder hinzufügen',
+        'add subscription to forwarders' => 'Abonnement für Weiterleitung hinzufügen',
         'add Forwarding' => 'Weiterleitung hinzufügen',
         'add Email account' => 'Postfach Hinzufügen',
-        'no forwarding available' => 'Kein Forwarder vorhanden',
+        'no forwarding available' => 'Keine Weiterleitungen vorhanden',
         'select Email account' => 'Wähle ein Postfach',
         'add new domain' => 'Neue Domain hinzufügen',
         'Not assigned' => 'Nicht zugewiesen',
@@ -94,7 +95,7 @@
         'no email account available' => 'Kein Postfach verfügbar',
 
         'deleted' => 'Gelöscht',
-        'edit forwarder' => 'Forwarder bearbeiten',
+        'edit forwarder' => 'Weiterleitung bearbeiten',
         'edit email accounts' => 'Postfächer bearbeiten',
         'edit specials' => 'Specials bearbeiten',
 
@@ -131,10 +132,10 @@
         'delete account' => 'Postfach löschen',
         'Email account %1$s not found' => 'Email-Konto %1$s nicht gefunden',
         
-        'activate forwarder' => 'Forwarder aktivieren',
-        'deactivate forwarder' => 'Forwarder deaktivieren',
-        'delete forwarder' => 'Forwarder löschen',
-        'Forwarder %1$s not found' => 'Forwarder %1$s nicht gefunden',
+        'activate forwarder' => 'Weiterleitung aktivieren',
+        'deactivate forwarder' => 'Weiterleitung deaktivieren',
+        'delete forwarder' => 'Weiterleitung löschen',
+        'Forwarder %1$s not found' => 'Weiterleitung %1$s nicht gefunden',
         
         'activate mailing list' => 'Mailing-Liste aktivieren',
         'deactivate mailing list' => 'Mailing-Liste deaktivieren',
@@ -147,7 +148,7 @@
         'Mailrobot %1$s not found' => 'Mail-Robot %1$s nicht gefunden',
         
         'the account is' => 'Das Postfach ist',
-        'the forwarder is' => 'Der Forwarder ist',
+        'the forwarder is' => 'Die Weiterleitung ist',
         'the mailing list is' => 'Die Mailing-Liste ist',
         'the mail robot is' => 'Der Mail-Robot ist',
         
@@ -158,7 +159,7 @@
         'Special %1$s not found' => 'Special %1$s nicht gefunden',
         
         'The account is deactivated' => 'Das Postfach ist deaktiviert',
-        'The forwarder is deactivated' => 'Der Forwarder ist deaktiviert',
+        'The forwarder is deactivated' => 'Die Weiterleitung ist deaktiviert',
         'The mail robot is deactivated' => 'Der Mail-Robot ist deaktiviert',
         'The mailing list is deactivated' => 'Die Mailing-Liste ist deaktiviert',
         
@@ -230,7 +231,7 @@
         'Catch-all already exists' => 'Catch-All existiert bereits',
         'DomainId not given' => 'DomainId nicht angegeben',
         'Account ID not given' => 'Account ID nicht angegeben',
-        'No forwarder available' => 'Forwarder nicht vorhanden',
+        'No forwarder available' => 'Weiterleitung nicht vorhanden',
         'Email address \'%value%\' already exists' => 'E-Mailadresse \'%value%\' existiert bereits',
         
         'Module to configure a Vpopmail + Qmail node' => 'Modul zum konfigurieren von Vpopmail + Qmail Knoten',
@@ -264,24 +265,24 @@
         'Catchall of %1$s was set on node %2$s' => 'Catchall von %1$s wurde auf Node %2$s gesetzt',
         'Failed to set Catchall of %1$s on node %2$s' => 'Catchall von %1$s konnte nicht auf Node %2$s gesetzt werden',
         
-        'Forwarder %1$s is conflicted' => 'Forwarder %1$s hat eine Differenz',
-        'Forwarder %1$s was activated' => 'Forwarder %1$s wurde aktiviert',
-        'Forwarder %1$s created' => 'Forwarder %1$s wurde erstellt',
-        'Forwarder %1$s was deactivated' => 'Forwarder %1$s wurde deaktiviert',
-        'Forwarder %1$s was deleted' => 'Forwarder %1$s wurde gelöscht',
-        'Forwarder %1$s was registered' => 'Forwarder %1$s wurde registriert',
-        'A report has reported the unregistered forwarder %1$s' => 'Ein Bericht hat den unregistrierten Forwarder %1$s gemeldet',
-        'Forwarder %1$s was updated' => 'Forwarder %1$s wurde aktualisiert',
-        'Resolved conflicted forwarder %1$s' => 'Differenz von Forwarder %1$s wurde gelöst',
+        'Forwarder %1$s is conflicted' => 'Weiterleitung %1$s hat eine Differenz',
+        'Forwarder %1$s was activated' => 'Weiterleitung %1$s wurde aktiviert',
+        'Forwarder %1$s created' => 'Weiterleitung %1$s wurde erstellt',
+        'Forwarder %1$s was deactivated' => 'Weiterleitung %1$s wurde deaktiviert',
+        'Forwarder %1$s was deleted' => 'Weiterleitung %1$s wurde gelöscht',
+        'Forwarder %1$s was registered' => 'Weiterleitung %1$s wurde registriert',
+        'A report has reported the unregistered forwarder %1$s' => 'Ein Bericht hat den unregistrierte Weiterleitung %1$s gemeldet',
+        'Forwarder %1$s was updated' => 'Weiterleitung %1$s wurde aktualisiert',
+        'Resolved conflicted forwarder %1$s' => 'Differenz von Weiterleitung %1$s wurde gelöst',
         
-        'Forwarder %1$s was activated on node %2$s' => 'Forwarder %1$s wurde auf Node %2$s aktiviert',
-        'Failed to activate forwarder %1$s on node %2$s' => 'Forwarder %1$s konnte nicht auf Node %2$s aktiviert werden',
-        'Forwarder %1$s was deleted on node %2$s' => 'Forwarder %1$s wurde auf Node %2$s gelöscht',
-        'Failed to delete forwarder %1$s on node %2$s' => 'Forwarder %1$s konnte nicht auf Node %2$s gelöscht werden',
-        'Forwarder %1$s was disabled on node %2$s' => 'Forwarder %1$s wurde auf Node %2$s deaktiviert',
-        'Failed to disable forwarder %1$s on node %2$s' => 'Forwarder %1$s konnte nicht auf Node %2$s deaktiviert werden',
-        'Forwarder %1$s was set on node %2$s' => 'Forwarder %1$s wurde auf Node %2$s gesetzt',
-        'Failed to set forwarder %1$s on node %2$s' => 'Forwarder %1$s konnte nicht auf Node %2$s gesetzt werden',
+        'Forwarder %1$s was activated on node %2$s' => 'Weiterleitung %1$s wurde auf Node %2$s aktiviert',
+        'Failed to activate forwarder %1$s on node %2$s' => 'Weiterleitung %1$s konnte nicht auf Node %2$s aktiviert werden',
+        'Forwarder %1$s was deleted on node %2$s' => 'Weiterleitung %1$s wurde auf Node %2$s gelöscht',
+        'Failed to delete forwarder %1$s on node %2$s' => 'Weiterleitung %1$s konnte nicht auf Node %2$s gelöscht werden',
+        'Forwarder %1$s was disabled on node %2$s' => 'Weiterleitung %1$s wurde auf Node %2$s deaktiviert',
+        'Failed to disable forwarder %1$s on node %2$s' => 'Weiterleitung %1$s konnte nicht auf Node %2$s deaktiviert werden',
+        'Forwarder %1$s was set on node %2$s' => 'Weiterleitung %1$s wurde auf Node %2$s gesetzt',
+        'Failed to set forwarder %1$s on node %2$s' => 'Weiterleitung %1$s konnte nicht auf Node %2$s gesetzt werden',
         
         'Catchall for domain %1$s was created' => 'Catchall für Domain %1$s wurde erstellt',
         'Mailing list %1$s was created' => 'Mailing-Liste %1$s wurde erstellt',

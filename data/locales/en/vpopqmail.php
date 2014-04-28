@@ -5,6 +5,7 @@
 
         'Email accounts' => 'Email accounts',
         'Forwarder' => 'Forwarder',
+        'Forwarders' => 'Forwarders',
         'Specials' => 'Specials',
 
         'Shall the email account really be deleted?' => 'Shall the E-mail account really be deleted?',
