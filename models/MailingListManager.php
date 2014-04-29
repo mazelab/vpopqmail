@@ -375,25 +375,17 @@ class MazelabVpopqmail_Model_MailingListManager
         
         // delete empty subscriber
         if (key_exists('subscriber', $context)){
-            $subscriberCreated = array();
             foreach ($context["subscriber"] as $subscriberId => $subscriber){
-                $dateAdded = $mailingList->getData("subscriber/$subscriberId/created")
-                           ? $mailingList->getData("subscriber/$subscriberId/created")
-                           : time();
                 $mailingList->removeSubscriber($subscriberId);
                 unset($context["subscriber"][$subscriberId]);
                 
                 if (!empty($subscriber)){
                     $context["subscriber"][md5($subscriber)] = $subscriber;
-                    $subscriberCreated[md5($subscriber)] = $dateAdded;
                 }
             }
         }
 
         $mailingList->setData($context);
-        foreach ($subscriberCreated as $subscriberId => $created) {
-            $mailingList->setData(array("subscriber/$subscriberId/created" => $created));
-        }
 
         if(!$mailingList->save()) {
             return false;

@@ -144,7 +144,7 @@ class MazelabVpopqmail_Model_ValueObject_Forwarder
             )
         );
         
-        $this->setData($data)->setData(array("forwardTo/$key/created" => time()));
+        $this->setData($data);
         if (!$this->save()) {
             Core_Model_DiFactory::getMessageManager()
                     ->addError(self::ERROR_SAVING, $this->getEmail());

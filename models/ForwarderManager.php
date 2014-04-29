@@ -777,13 +777,8 @@ class MazelabVpopqmail_Model_ForwarderManager
 
         // delete empty forwarder
         if (isset($data["forwardTo"])){
-            $targetTimeCreated = array();
             foreach ($data["forwardTo"] as $targetId => $target){
                 $accountEmail = $forwarder->getData("forwardTo/$targetId");
-                $dateAdded = $forwarder->getData("forwardTo/$targetId/created")
-                           ? $forwarder->getData("forwardTo/$targetId/created")
-                           : time();
-                
                 $forwarder->deleteForwarderTarget($targetId);
                 unset($data["forwardTo"][$targetId]);
                 
@@ -793,7 +788,6 @@ class MazelabVpopqmail_Model_ForwarderManager
                 
                 if (!empty($target)){
                     $data["forwardTo"][md5($target)] = $target;
-                    $targetTimeCreated[md5($target)] = $dateAdded;
                 }
             }
         }
@@ -804,9 +798,6 @@ class MazelabVpopqmail_Model_ForwarderManager
         }
         
         $forwarder->setData($data);
-        foreach ($targetTimeCreated as $targetId => $created) {
-            $forwarder->setData(array("forwardTo/$targetId/created" => $created));
-        }
 
         if(!$forwarder->save()) {
             Core_Model_DiFactory::getMessageManager()

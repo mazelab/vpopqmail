@@ -13,5 +13,14 @@ class MazelabVpopqmail_Model_Bean_Forwarder extends MazeLib_Bean
         'forwardTo/*' => MazeLib_Bean::STATUS_MANUALLY
     );
     
-}
+    protected function _mergeMazeProperty($path, $orig, $update, $remote = false)
+    {
+        $property = parent::_mergeMazeProperty($path, $orig, $update, $remote);
 
+        if(!array_key_exists("create", $property)) {
+            $property["create"] = time();
+        }
+        
+        return $property;
+    }
+}

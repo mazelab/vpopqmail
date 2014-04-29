@@ -155,7 +155,7 @@ class MazelabVpopqmail_Model_ValueObject_MailingList
             )
         );
 
-        $this->setData($data)->setData(array("subscriber/$subscriberId/created" => time()));
+        $this->setData($data);
         if(!$this->save()) {
             return false;
         }
