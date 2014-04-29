@@ -416,7 +416,7 @@ class MazelabVpopqmail_Model_ValueObject_MailingList
             return false;
         }
         
-        if(!$this->setData(array("subscriber/$subscriberId" => null))->save()) {
+        if(!$this->unsetProperty("subscriber/$subscriberId")->save()) {
             Core_Model_DiFactory::getMessageManager()
                     ->addError(self::ERROR_SAVING, $this->getEmail());
             return false;
