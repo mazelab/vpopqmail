@@ -32,6 +32,8 @@ class MazelabVpopqmail_ConfigController extends Zend_Controller_Action
                     ->addActionContext('configdomain', array('json', 'html'))
                     ->initContext();
 
+        $this->_helper->layout->disableLayout();
+
         // set view messages from MessageManager
         $this->_helper->getHelper("SetDefaultViewVars");
     }
