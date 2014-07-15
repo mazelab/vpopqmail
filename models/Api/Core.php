@@ -106,12 +106,14 @@ class MazelabVpopqmail_Model_Api_Core extends Core_Model_Module_Api_Abstract
     }
 
     /**
-     * trigger when the module will be removed
-     * 
-     * @param  string $domainId
+     * triggers before removing a domain service
+     *
+     * if returned false it will abort adding the service
+     *
+     * @param string $domainId
      * @return boolean
      */
-    public function removeDomainService($domainId)
+    public function preRemoveDomainService($domainId)
     {
         return MazelabVpopqmail_Model_DiFactory::getDomainManager()->removeDomain($domainId);
     }
