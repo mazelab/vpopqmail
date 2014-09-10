@@ -38,7 +38,7 @@ class MazelabVpopqmail_Form_DiffForwarder extends Zend_Form
         }
 
         $raw = $forwarder->getBean()->asArray(true);
-        if(!key_exists('forwardTo', $raw) || !($targets = $raw['forwardTo'])) {
+        if(!array_key_exists('forwardTo', $raw) || !($targets = $raw['forwardTo'])) {
             return $this;
         }
         

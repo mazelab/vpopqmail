@@ -40,7 +40,7 @@ class MazelabVpopqmail_Form_ConfigNode extends Zend_Form
     {
         $behavior = null;
         
-        if(key_exists('selectedBehavior', $data)) {
+        if(array_key_exists('selectedBehavior', $data)) {
             $behavior = $data['selectedBehavior'];
         }
         

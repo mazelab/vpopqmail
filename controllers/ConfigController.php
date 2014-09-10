@@ -121,7 +121,7 @@ class MazelabVpopqmail_ConfigController extends Zend_Controller_Action
         if ($this->_request->isPost()){
             $post = $this->getRequest()->getPost();
             
-            if(key_exists('nodes', $post)) {
+            if(array_key_exists('nodes', $post)) {
                 if($form->isValidPartial(array('nodes' => $this->getParam('nodes')))) {
                     $this->view->result = MazelabVpopqmail_Model_DiFactory::getDomainManager()
                             ->assignDomain($domain->getId(), $form->getValue('nodes'));

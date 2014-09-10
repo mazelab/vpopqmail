@@ -64,7 +64,7 @@ class MazelabVpopqmail_Form_Account extends Zend_Form
         $clientConfig = $configManager->getClientConfig($owner->getId());
         
         // no quota limit set
-        if(empty($clientConfig) || !key_exists('quota', $clientConfig) || !is_numeric($clientConfig['quota'])) {
+        if(empty($clientConfig) || !array_key_exists('quota', $clientConfig) || !is_numeric($clientConfig['quota'])) {
             return true;
         }
         

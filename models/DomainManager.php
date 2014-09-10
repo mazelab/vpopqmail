@@ -197,7 +197,7 @@ class MazelabVpopqmail_Model_DomainManager
     {
         $config = MazelabVpopqmail_Model_DiFactory::getConfigManager()->getNodeConfig($nodeId);
         
-        if(!key_exists('domains', $config) || !is_array($config['domains'])) {
+        if(!array_key_exists('domains', $config) || !is_array($config['domains'])) {
             return array();
         }
         

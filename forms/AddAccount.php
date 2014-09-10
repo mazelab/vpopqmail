@@ -93,7 +93,7 @@ class MazelabVpopqmail_Form_AddAccount extends Zend_Form
         $clientConfig = $configManager->getClientConfig($clientId);
         
         // no quota limit set
-        if(!is_array($clientConfig) || !key_exists('quota', $clientConfig)
+        if(!is_array($clientConfig) || !array_key_exists('quota', $clientConfig)
                 || !is_numeric($clientConfig['quota'])) {
             return $this;
         }
@@ -116,7 +116,7 @@ class MazelabVpopqmail_Form_AddAccount extends Zend_Form
         $clientConfig = $configManager->getClientConfig($clientId);
         
         // no quota limit set
-        if(!is_array($clientConfig) || !key_exists('countAccounts', $clientConfig)
+        if(!is_array($clientConfig) || !array_key_exists('countAccounts', $clientConfig)
                 || !is_numeric($clientConfig['countAccounts'])) {
             return $this;
         }

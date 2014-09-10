@@ -19,7 +19,7 @@ class MazelabVpopqmail_Model_ClientManager
         $clients = array();
         
         foreach(MazelabVpopqmail_Model_DiFactory::getDomainManager()->getEmailDomainsByNode($nodeId) as $domain) {
-            if(($owner = $domain->getOwner()) && !key_exists($owner->getId(), $clients)) {
+            if(($owner = $domain->getOwner()) && !array_key_exists($owner->getId(), $clients)) {
                 $clients[$owner->getId()] = $owner;
             }
         }
@@ -61,7 +61,7 @@ class MazelabVpopqmail_Model_ClientManager
         $clientConfig = MazelabVpopqmail_Model_DiFactory::getConfigManager()->getClientConfig($clientId);
         $usedAccounts = $this->getUsedAccounts($clientId);
         
-        if(!key_exists('countAccounts', $clientConfig) || empty($clientConfig['countAccounts'])) {
+        if(!array_key_exists('countAccounts', $clientConfig) || empty($clientConfig['countAccounts'])) {
             return 0;
         }
 
@@ -105,7 +105,7 @@ class MazelabVpopqmail_Model_ClientManager
         $clientConfig = MazelabVpopqmail_Model_DiFactory::getConfigManager()->getClientConfig($clientId);
         $usedQuota = $this->getUsedQuotas($clientId);
         
-        if(!key_exists('quota', $clientConfig) || empty($clientConfig['quota'])) {
+        if(!array_key_exists('quota', $clientConfig) || empty($clientConfig['quota'])) {
             return 0;
         }
  

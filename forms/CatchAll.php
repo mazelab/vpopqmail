@@ -49,7 +49,7 @@ class MazelabVpopqmail_Form_CatchAll extends Zend_Form
     {
         $behavior = null;
         
-        if(key_exists('selectedBehavior', $data))
+        if(array_key_exists('selectedBehavior', $data))
             $behavior = $data['selectedBehavior'];
         
         if($behavior == MazelabVpopqmail_Model_CatchAllManager::CATCH_ALL_BEHAVIOR_SEND_TO_EMAIL) {

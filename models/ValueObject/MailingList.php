@@ -230,14 +230,14 @@ class MazelabVpopqmail_Model_ValueObject_MailingList
     public function evalReport($data)
     {
         if($this->getData('delete')) {
-            if(key_exists('status', $data) && !$data['status']) {
+            if(array_key_exists('status', $data) && !$data['status']) {
                 return MazelabVpopqmail_Model_DiFactory::getMailingListManager()->deleteMailingList($this->getId());
             }
             
             return $this->apply(false);
         }
         
-        if(!$this->getStatus() && (!key_exists('subscriber', $data) || !$data['subscriber'])) {
+        if(!$this->getStatus() && (!array_key_exists('subscriber', $data) || !$data['subscriber'])) {
             $data['status'] = false;
         }
         
@@ -389,7 +389,7 @@ class MazelabVpopqmail_Model_ValueObject_MailingList
         $registeredSubscriber = $this->getSubscribers();
         $subscriberId = md5($email);
         
-        if(key_exists($subscriberId, $registeredSubscriber)) {
+        if(array_key_exists($subscriberId, $registeredSubscriber)) {
             return true;
         }
         
@@ -454,8 +454,8 @@ class MazelabVpopqmail_Model_ValueObject_MailingList
      */
     public function setData(array $data)
     {
-        if(key_exists('user', $data)) {
-            if(!key_exists('domainId', $data)) {
+        if(array_key_exists('user', $data)) {
+            if(!array_key_exists('domainId', $data)) {
                 $domain = $this->getDomain();    
             } else {
                 $domain = Core_Model_DiFactory::getDomainManager()->getDomain($data['domainId']);
@@ -465,7 +465,7 @@ class MazelabVpopqmail_Model_ValueObject_MailingList
                 $data['label'] = $data['user'] . '@' . $domain->getName();
             }
         }
-        if(key_exists('label', $data)) {
+        if(array_key_exists('label', $data)) {
             $this->_rebuildSearchIndex = true;
         }
         
@@ -483,9 +483,9 @@ class MazelabVpopqmail_Model_ValueObject_MailingList
     public function setRemoteData(array $data)
     {
         // cast boolean values
-        if(key_exists('status', $data) && (empty($data['status']) || $data['status'] === 'false')) {
+        if(array_key_exists('status', $data) && (empty($data['status']) || $data['status'] === 'false')) {
             $data['status'] = false;
-        } elseif(key_exists('status', $data)) {
+        } elseif(array_key_exists('status', $data)) {
             $data['status'] = true;
         }
         

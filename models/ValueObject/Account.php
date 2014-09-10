@@ -273,7 +273,7 @@ class MazelabVpopqmail_Model_ValueObject_Account
     public function evalReport($data)
     {
         if($this->getData('delete')) {
-            if(key_exists('status', $data) && !$data['status']) {
+            if(array_key_exists('status', $data) && !$data['status']) {
                 return MazelabVpopqmail_Model_DiFactory::getAccountManager()->deleteAccount($this->getId());
             }
             
@@ -445,7 +445,7 @@ class MazelabVpopqmail_Model_ValueObject_Account
      */
     public function setData(array $data)
     {
-        if(key_exists('label', $data)) {
+        if(array_key_exists('label', $data)) {
             $this->_rebuildSearchIndex = true;
         }
         
@@ -505,13 +505,13 @@ class MazelabVpopqmail_Model_ValueObject_Account
     public function setRemoteData($data)
     {
         // cast boolean values
-        if(key_exists('status', $data) && !((bool) $data['status'])) {
+        if(array_key_exists('status', $data) && !((bool) $data['status'])) {
             $data['status'] = false;
-        } elseif(key_exists('status', $data)) {
+        } elseif(array_key_exists('status', $data)) {
             $data['status'] = true;
         }
         
-        if(key_exists('quota', $data) && empty($data['quota'])) {
+        if(array_key_exists('quota', $data) && empty($data['quota'])) {
             $data['quota'] = null;
         }
         

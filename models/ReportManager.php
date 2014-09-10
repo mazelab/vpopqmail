@@ -53,7 +53,7 @@ class MazelabVpopqmail_Model_ReportManager
         foreach($accountManager->getAccountsByDomain($domain->getId()) as $account) {
             $email_md5 = md5(strtolower($account->getEmail()));
 
-            if(key_exists($email_md5, $data)) {
+            if(array_key_exists($email_md5, $data)) {
                 $account->evalReport($data[$email_md5]);
             } else {
                 $account->evalReport(array('status' => false));
@@ -89,7 +89,7 @@ class MazelabVpopqmail_Model_ReportManager
             $catchAll = $catchAllManager->getCatchAllByDomain($domain->getId());
         }
         
-        if (key_exists('behavior', $data)){
+        if (array_key_exists('behavior', $data)){
             $data["behavior"] = strtolower($data['behavior']);
         }
         
@@ -151,7 +151,7 @@ class MazelabVpopqmail_Model_ReportManager
         foreach($forwarderManager->getForwardersByDomain($domain->getId()) as $forwarder) {
             $email_md5 = md5(strtolower($forwarder->getEmail()));
             
-            if(key_exists($email_md5, $data)) {
+            if(array_key_exists($email_md5, $data)) {
                 $forwarder->evalReport($data[$email_md5]);
             } else {
                 $forwarder->evalReport(array('status' => false));
@@ -182,7 +182,7 @@ class MazelabVpopqmail_Model_ReportManager
         foreach($mailingListManager->getMailingListsByDomain($domain->getId()) as $list) {
             $email_md5 = md5(strtolower($list->getEmail()));
 
-            if(key_exists($email_md5, $data)) {
+            if(array_key_exists($email_md5, $data)) {
                 if (strtolower($list->getEmail()) == $data[$email_md5]["email"]){
                     $data[$email_md5]["email"] = $list->getEmail();
                 }
@@ -216,7 +216,7 @@ class MazelabVpopqmail_Model_ReportManager
         foreach($mailRobotManager->getMailRobotsByDomain($domain->getId()) as $robot) {
             $email_md5 = md5(strtolower($robot->getEmail()));
             
-            if(key_exists($email_md5, $data)) {
+            if(array_key_exists($email_md5, $data)) {
                 $robot->evalReport($data[$email_md5]);
             } else {
                 $robot->evalReport(array('status' => false));
@@ -247,7 +247,7 @@ class MazelabVpopqmail_Model_ReportManager
         }
         
         $data = json_decode($report, true);
-        if(!$data || !key_exists('domains', $data) || !is_array($data['domains'])) {
+        if(!$data || !array_key_exists('domains', $data) || !is_array($data['domains'])) {
             $data['domains'] = array();
         }
 
@@ -255,7 +255,7 @@ class MazelabVpopqmail_Model_ReportManager
         foreach(MazelabVpopqmail_Model_DiFactory::getDomainManager()->getEmailDomainsByNode($nodeId) as $domain) {
             $domain_md5 = md5(strtolower($domain->getName()));
 
-            if(key_exists($domain_md5, $data['domains'])) {
+            if(array_key_exists($domain_md5, $data['domains'])) {
                 $this->_evalDomainReport($domain, $node->getId(), $data['domains'][$domain_md5]);
             } else {
                 $this->_evalDomainReport($domain, $node->getId(), array());
@@ -267,7 +267,7 @@ class MazelabVpopqmail_Model_ReportManager
         $domainManager = Core_Model_DiFactory::getDomainManager();
         if(!empty($unknownDomains)) {
             foreach ($unknownDomains as $domain_md5 => $context) {
-                if (!key_exists('name', $context)) {
+                if (!array_key_exists('name', $context)) {
                     continue;
                 }
 

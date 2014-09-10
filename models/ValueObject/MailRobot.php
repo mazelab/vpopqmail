@@ -180,7 +180,7 @@ class MazelabVpopqmail_Model_ValueObject_MailRobot
     public function evalReport($data)
     {
         if($this->getData('delete')) {
-            if(key_exists('status', $data) && !$data['status']) {
+            if(array_key_exists('status', $data) && !$data['status']) {
                 return $this->_getProvider()->deleteRobot($this);
             }
             
@@ -312,10 +312,10 @@ class MazelabVpopqmail_Model_ValueObject_MailRobot
      */
     public function setData(array $data)
     {
-        if(key_exists('label', $data)) {
+        if(array_key_exists('label', $data)) {
             $this->_rebuildSearchIndex = true;
         }
-        if(key_exists('content', $data)) {
+        if(array_key_exists('content', $data)) {
             $data['content'] = str_replace("\r\n","\n", $data['content']);
             // normalize tabs
             $data['content'] = str_replace("\t","    ", $data['content']);
@@ -336,9 +336,9 @@ class MazelabVpopqmail_Model_ValueObject_MailRobot
     public function setRemoteData($data)
     {
         // cast boolean values
-        if(key_exists('status', $data) && (empty($data['status']) || $data['status'] === 'false')) {
+        if(array_key_exists('status', $data) && (empty($data['status']) || $data['status'] === 'false')) {
             $data['status'] = false;
-        } elseif(key_exists('status', $data)) {
+        } elseif(array_key_exists('status', $data)) {
             $data['status'] = true;
         }
         

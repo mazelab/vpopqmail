@@ -13,8 +13,8 @@ class MazelabVpopqmail_Model_Plugins_MailSubnavi extends Zend_Controller_Plugin_
      */
     public function dispatchLoopStartup(Zend_Controller_Request_Abstract $request)
     {
-        if(!($identity = Zend_Auth::getInstance()->getIdentity()) || !key_exists('group', $identity) || 
-                !key_exists('_id', $identity)  || $identity['group'] !== Core_Model_UserManager::GROUP_CLIENT) {
+        if(!($identity = Zend_Auth::getInstance()->getIdentity()) || !array_key_exists('group', $identity) ||
+                !array_key_exists('_id', $identity)  || $identity['group'] !== Core_Model_UserManager::GROUP_CLIENT) {
             return false;
         }
 

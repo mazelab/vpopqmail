@@ -46,11 +46,11 @@ class MazelabVpopqmail_Form_Validate_AvailableQuotas extends Zend_Validate_Abstr
             return false;
         }
         
-        if(key_exists('clientId', $config)) {
+        if(array_key_exists('clientId', $config)) {
             $this->_clientId = $config['clientId'];
         }
             
-        if(key_exists('selectedAccountId', $config)) {
+        if(array_key_exists('selectedAccountId', $config)) {
             $this->_selectedAccountId = $config['selectedAccountId'];
         }
     }

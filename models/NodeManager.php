@@ -30,7 +30,7 @@ class MazelabVpopqmail_Model_NodeManager
      
         foreach(array_keys(MazelabVpopqmail_Model_DiFactory::getDomainManager()
                 ->getEmailDomainsByOwner($clientId)) as $domainId) {
-            if(($node = $this->getNodeOfDomain($domainId)) && !key_exists($node->getId(), $nodes)) {
+            if(($node = $this->getNodeOfDomain($domainId)) && !array_key_exists($node->getId(), $nodes)) {
                 $nodes[$node->getId()] = $node;
             }
         }

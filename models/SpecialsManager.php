@@ -129,7 +129,7 @@ class MazelabVpopqmail_Model_SpecialsManager
             return null;
         }
         
-        if(!key_exists('type', $special) || !key_exists('_id', $special)) {
+        if(!array_key_exists('type', $special) || !array_key_exists('_id', $special)) {
             return null;
         }
         
@@ -170,7 +170,7 @@ class MazelabVpopqmail_Model_SpecialsManager
             return null;
         }
         
-        if(!key_exists('type', $special) || !key_exists('_id', $special)) {
+        if(!array_key_exists('type', $special) || !array_key_exists('_id', $special)) {
             return null;
         }
         

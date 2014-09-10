@@ -214,7 +214,7 @@ class MazelabVpopqmail_Model_ValueObject_CatchAll
      */
     public function setData(array $data)
     {
-        if(!key_exists('behavior', $data) && key_exists('selectedBehavior', $data)) {
+        if(!array_key_exists('behavior', $data) && array_key_exists('selectedBehavior', $data)) {
             $selectedBehavior = $data['selectedBehavior'];
             
             if($selectedBehavior == MazelabVpopqmail_Model_CatchAllManager::
@@ -222,11 +222,11 @@ class MazelabVpopqmail_Model_ValueObject_CatchAll
                 $data['behavior'] = 'delete';
             } else if ($selectedBehavior == MazelabVpopqmail_Model_CatchAllManager::
                     CATCH_ALL_BEHAVIOR_SEND_TO_EMAIL &&
-                    key_exists('sendToEmail', $data)) {
+                array_key_exists('sendToEmail', $data)) {
                 $data['behavior'] = $data['sendToEmail'];
             } else if ($selectedBehavior == MazelabVpopqmail_Model_CatchAllManager::
                     CATCH_ALL_BEHAVIOR_MOVE_TO_ACCOUNT &&
-                    key_exists('sendToAccount', $data)) {
+                array_key_exists('sendToAccount', $data)) {
                 $accountManager = MazelabVpopqmail_Model_DiFactory::getAccountManager();
                 $account = $accountManager->getAccount($data['sendToAccount']);
                 

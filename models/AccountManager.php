@@ -106,7 +106,7 @@ class MazelabVpopqmail_Model_AccountManager
     protected function _loadAccountByEmail($email)
     {
         $data = $this->getProvider()->getAccountByEmail($email);
-        if(empty($data) || !key_exists('_id', $data)) {
+        if(empty($data) || !array_key_exists('_id', $data)) {
             return null;
         }
         
@@ -170,9 +170,9 @@ class MazelabVpopqmail_Model_AccountManager
      */
     public function createAccount(array $data, $encryptPassword = true)
     {
-        if(!key_exists('user', $data) 
-                || !key_exists('password', $data)
-                || !key_exists('domainId', $data)) {
+        if(!array_key_exists('user', $data)
+                || !array_key_exists('password', $data)
+                || !array_key_exists('domainId', $data)) {
             return false;
         }
         
@@ -196,10 +196,10 @@ class MazelabVpopqmail_Model_AccountManager
             return false;
         }
         
-        if(key_exists('quota', $data) && !$data['quota']) {
+        if(array_key_exists('quota', $data) && !$data['quota']) {
             $data['quota'] = null;
         }
-        if(key_exists('status', $data)) {
+        if(array_key_exists('status', $data)) {
             $data["status"] = (boolean) $data["status"];
         }else {
             $data["status"] = true;
@@ -463,7 +463,7 @@ class MazelabVpopqmail_Model_AccountManager
                 , Core_Model_Logger::TYPE_CONFLICT,
                 MazelabVpopqmail_Model_ValueObject_Account::LOG_ACTION_ACCOUNT_CONFLICT)
                 as $entry) {
-            if(!key_exists('contextId', $entry)) {
+            if(!array_key_exists('contextId', $entry)) {
                 continue;
             }
             
@@ -488,7 +488,7 @@ class MazelabVpopqmail_Model_AccountManager
                 , Core_Model_Logger::TYPE_CONFLICT,
                 MazelabVpopqmail_Model_ValueObject_Account::LOG_ACTION_ACCOUNT_CONFLICT)
                 as $entry) {
-            if(!key_exists('contextId', $entry)) {
+            if(!array_key_exists('contextId', $entry)) {
                 continue;
             }
             
@@ -513,7 +513,7 @@ class MazelabVpopqmail_Model_AccountManager
                 , Core_Model_Logger::TYPE_CONFLICT,
                 MazelabVpopqmail_Model_ValueObject_Account::LOG_ACTION_ACCOUNT_CONFLICT)
                 as $entry) {
-            if(!key_exists('contextId', $entry) || !isset($entry['domain']['label'])) {
+            if(!array_key_exists('contextId', $entry) || !isset($entry['domain']['label'])) {
                 continue;
             }
             
@@ -561,7 +561,7 @@ class MazelabVpopqmail_Model_AccountManager
      */
     public function importAccountFromReport($domainId, array $data)
     {
-        if(!key_exists('email', $data)) {
+        if(!array_key_exists('email', $data)) {
             return false;
         }
         
@@ -648,7 +648,7 @@ class MazelabVpopqmail_Model_AccountManager
             return false;
         }
         
-        if(key_exists('quota', $data) && (!$data['quota'] || $data['quota'] == "")) {
+        if(array_key_exists('quota', $data) && (!$data['quota'] || $data['quota'] == "")) {
             $data['quota'] = null;
         }
         
@@ -700,11 +700,11 @@ class MazelabVpopqmail_Model_AccountManager
             return false;
         }
         
-        if(key_exists('password', $data)) {
+        if(array_key_exists('password', $data)) {
             $account->setPassword($data['password']);
             unset($data['password']);
         }
-        if(key_exists('quota', $data) && (!$data['quota'] || $data['quota'] == "")) {
+        if(array_key_exists('quota', $data) && (!$data['quota'] || $data['quota'] == "")) {
             $data['quota'] = null;
         }
         

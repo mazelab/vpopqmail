@@ -86,7 +86,7 @@ class MazelabVpopqmail_Model_MailingListManager
     protected function _loadMailingListByEmail($email)
     {
         $data = $this->getProvider()->getMailingListByEmail($email);
-        if(empty($data) || !key_exists('_id', $data)) {
+        if(empty($data) || !array_key_exists('_id', $data)) {
             return false;
         }
         
@@ -110,7 +110,7 @@ class MazelabVpopqmail_Model_MailingListManager
             return false;
         }
         
-        if(!key_exists('user', $context)) {
+        if(!array_key_exists('user', $context)) {
             return false;
         }
         
@@ -137,7 +137,7 @@ class MazelabVpopqmail_Model_MailingListManager
         $context['domainName'] = $domain->getName();
         $context['ownerId'] = $owner->getId();
 
-        if(key_exists('subscriber', $context)) {
+        if(array_key_exists('subscriber', $context)) {
             $subscriber = $context['subscriber'];
             unset($context['subscriber']);
             
@@ -374,7 +374,7 @@ class MazelabVpopqmail_Model_MailingListManager
         }
         
         // delete empty subscriber
-        if (key_exists('subscriber', $context)){
+        if (array_key_exists('subscriber', $context)){
             foreach ($context["subscriber"] as $subscriberId => $subscriber){
                 $mailingList->removeSubscriber($subscriberId);
                 unset($context["subscriber"][$subscriberId]);
@@ -415,7 +415,7 @@ class MazelabVpopqmail_Model_MailingListManager
      */
     public function importListFromReport($domainId, array $data)
     {
-        if(!key_exists('email', $data)) {
+        if(!array_key_exists('email', $data)) {
             return false;
         }
         

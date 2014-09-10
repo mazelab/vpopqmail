@@ -86,7 +86,7 @@ class MazelabVpopqmail_Model_Api_Core extends Core_Model_Module_Api_Abstract
         $domains = array();
         $clientDomains = $domainManager->getEmailDomainsByOwner($clientId);
         foreach($domainsByNode as $domainId => $domain) {
-            if(key_exists($domainId, $clientDomains)) {
+            if(array_key_exists($domainId, $clientDomains)) {
                 $domains[$domainId] = $domain;
             }
         }

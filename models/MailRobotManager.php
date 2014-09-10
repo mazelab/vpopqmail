@@ -86,7 +86,7 @@ class MazelabVpopqmail_Model_MailRobotManager
     protected function _loadMailRobotByEmail($mailRobotId)
     {
         $data = $this->getProvider()->getMailRobotByEmail($mailRobotId);
-        if(empty($data) || !key_exists('_id', $data)) {
+        if(empty($data) || !array_key_exists('_id', $data)) {
             return false;
         }
         
@@ -105,7 +105,7 @@ class MazelabVpopqmail_Model_MailRobotManager
         $forwarderManager = MazelabVpopqmail_Model_DiFactory::getForwarderManager();
         $specialsManager = MazelabVpopqmail_Model_DiFactory::getSpecialsManager();
         
-        if(!key_exists('user', $context)) {
+        if(!array_key_exists('user', $context)) {
             return null;
         }
         
@@ -139,7 +139,7 @@ class MazelabVpopqmail_Model_MailRobotManager
         }else {
             $context["status"] = true;
         }
-        if(!key_exists('copyTo', $context) || !$context['copyTo']) {
+        if(!array_key_exists('copyTo', $context) || !$context['copyTo']) {
             $context['copyTo'] = null;
         }
         
@@ -356,7 +356,7 @@ class MazelabVpopqmail_Model_MailRobotManager
      */
     public function importRobotFromReport($domainId, array $data)
     {
-        if(!key_exists('email', $data)) {
+        if(!array_key_exists('email', $data)) {
             return false;
         }
         

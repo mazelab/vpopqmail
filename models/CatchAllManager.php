@@ -101,7 +101,7 @@ class MazelabVpopqmail_Model_CatchAllManager
     protected function _loadCatchAllByDomain($domainId)
     {
         $data = $this->getProvider()->getCatchAllByDomain($domainId);
-        if(empty($data) || !key_exists('_id', $data)) {
+        if(empty($data) || !array_key_exists('_id', $data)) {
             return null;
         }
         
@@ -121,7 +121,7 @@ class MazelabVpopqmail_Model_CatchAllManager
     protected function _loadCatchAllByDomainName($domainName)
     {
         $data = $this->getProvider()->getCatchAllByDomainName($domainName);
-        if(empty($data) || !key_exists('_id', $data)) {
+        if(empty($data) || !array_key_exists('_id', $data)) {
             return null;
         }
         
@@ -298,16 +298,16 @@ class MazelabVpopqmail_Model_CatchAllManager
             $nodeConfig = MazelabVpopqmail_Model_DiFactory::getConfigManager()->getNodeConfig($node->getId());
         }
         
-        if (isset($nodeConfig) && key_exists('selectedBehavior', $nodeConfig) &&
+        if (isset($nodeConfig) && array_key_exists('selectedBehavior', $nodeConfig) &&
                 (!empty($nodeConfig['selectedBehavior']) || $nodeConfig['selectedBehavior'] !== "")) {
             $behavior = $nodeConfig['selectedBehavior'];
-            if(key_exists('sendToEmail', $nodeConfig)) {
+            if(array_key_exists('sendToEmail', $nodeConfig)) {
                 $sendToEmail = $nodeConfig['sendToEmail'];
             }
-        } elseif ($moduleConfig && key_exists('selectedBehavior', $moduleConfig) &&
+        } elseif ($moduleConfig && array_key_exists('selectedBehavior', $moduleConfig) &&
                 (!empty($moduleConfig['selectedBehavior']) || $moduleConfig['selectedBehavior'] !== "")) {
             $behavior = $moduleConfig['selectedBehavior'];
-            if(key_exists('sendToEmail', $moduleConfig)) {
+            if(array_key_exists('sendToEmail', $moduleConfig)) {
                 $sendToEmail = $moduleConfig['sendToEmail'];
             }
         }
