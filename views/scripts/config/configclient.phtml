@@ -1,1 +1,23 @@
-<?= $this->render('config/configclient.ajax.phtml'); ?>
+<div id="configClientEmail">
+    <dl class="row-fluid">
+        <dt class="span4">
+            <label><?= $this->translate('mail quota in MB') ?></label>
+        </dt>
+        <dd class="span8">
+            <span><?= $this->form->quota ?></span>
+        </dd>
+    </dl>
+    <dl class="row-fluid">
+        <dt class="span4">
+            <label><?= $this->translate('number of email accounts') ?></label>
+        </dt>
+        <dd class="span8">
+            <span><?= $this->form->countAccounts ?></span>
+        </dd>
+    </dl>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#configClientEmail .jsEditable').mazeEditable('<?= $this->url(array('clientId' => $this->html('client/_id'), 'clientLabel' => $this->html('client/label')), 'mazelab-vpopqmail_configClient') ?>?format=json', mazeEditableOptions);
+    });
+</script>

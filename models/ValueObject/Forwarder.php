@@ -74,7 +74,7 @@ class MazelabVpopqmail_Model_ValueObject_Forwarder
                 ->setMessageVars($this->getEmail())->setData($this->getConflicts())
                 ->setAction(self::LOG_ACTION_FORWARDER_CONFLICT)
                 ->setModuleRef(MazelabVpopqmail_Model_ConfigManager::MODULE_NAME)
-                ->setRoute(array($this->getEmail()), 'MazelabVpopqmail_diffForwarderDetail')
+                ->setRoute(array($this->getEmail()), 'mazelab-vpopqmail_diffForwarderDetail')
                 ->setDomainRef($this->getDomain()->getId())
                 ->setClientRef($this->getOwner()->getId())
                 ->saveByContext($this->getEmail());

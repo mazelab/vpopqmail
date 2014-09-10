@@ -1,1 +1,111 @@
-<?= $this->render('config/configdomain.ajax.phtml'); ?>
+<div id="configDomainEmail">
+    <div class="row-fluid cssTabAccordionSection">
+        <div id="emailDomainConfigNodeAssignment" class="row-fluid">
+            <dl class="row-fluid">
+                <dt class="span4">
+                    <label>
+                        <?= $this->translate('Assign node') ?>
+                    </label>
+                </dt>
+                <dd class="span8">
+                    <?= $this->form->nodes ?>
+                    <input id="assignEmailNode" class="btn btn-info"
+                           type="button" value="<?= $this->translate('Ok') ?>" />
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div id="emailAdvancedDomainConfig" class="row-fluid">
+        <div class="row-fluid cssTabAccordionSection">
+            <h5><?= $this->translate('Client information') ?></h5>
+            <div id="emailAdvancedDomainConfigOutgoingServer" class="row-fluid">
+                <dl class="span12">
+                    <dt class="span4">
+                        <label>
+                            <?= $this->translate("Outgoing mail server"); ?>
+                        </label>
+                    </dt>
+                    <dd class="span7">
+                        <?= $this->form->outgoingMailServer; ?>
+                    </dd>
+                </dl>
+            </div>
+            <div id="emailAdvancedDomainConfigIngoingServer" class="row-fluid">
+                <dl class="span12">
+                    <dt class="span4">
+                        <label>
+                            <?= $this->translate("Incoming mail server"); ?>
+                        </label>
+                    </dt>
+                    <dd class="span7">
+                        <?= $this->form->incomingMailServer; ?>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div id="emailConfirmAssignment" class="modal hide fade">
+        <div class="modal-body">
+            <p>
+                <?= $this->translate('Existing configuration on the actual node won\'t be changed. You need to do that manually. Are you sure to change the node assignment?') ?>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a class="btn" data-dismiss="modal">
+                <?= $this->translate('cancel') ?>
+            </a>
+            <a id="emailAssignDomain" class="btn btn-primary" data-dismiss="modal">
+                <?= $this->translate('ok') ?>
+            </a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var currentNode = '<?= $this->form->nodes->getValue() ?>';
+
+        $(".jsEditable").mazeEditable('<?= $this->url(array($this->html("domain/name")), "mazelab-vpopqmail_configDomain") ?>?format=json', mazeEditableOptions);
+
+        $("#configDomainEmail #nodes").selectpicker();
+
+        $('#emailAssignDomain').click(function() {
+            $('#emailConfirmAssignment').modal("hide");
+
+            $.ajax({
+                url: '<?= $this->url(array($this->html("domain/name")), 'mazelab-vpopqmail_configDomain') ?>?format=json',
+                data: {
+                    nodes : $('#configDomainEmail #nodes :selected').val(),
+                    deleteData : $('#configDomainEmail #deleteData:checked').val()
+                },
+                type: 'POST',
+                success: function(data) {
+                    if(data.result === true) {
+                        data.successes.push("<?= $this->translate('Changes have been saved') ?>");
+                        currentNode = $('#configDomainEmail #nodes :selected').val();
+                    }
+                    setTooltips(data, '#assignEmailNode');
+                    setTimeout(function(){
+                        resetTooltips();
+                    }, 4000);
+                }
+            });
+
+            return false;
+        });
+
+        $('#assignEmailNode').click(function() {
+            if(currentNode === $('#configDomainEmail #nodes :selected').val()) {
+                return false;
+            }
+
+            if(!currentNode) {
+                $('#emailAssignDomain').click();
+                return false;
+            }
+
+            $("#emailConfirmAssignment").modal({backdrop:"static", show:true});
+            return false;
+        });
+
+    });
+</script>
