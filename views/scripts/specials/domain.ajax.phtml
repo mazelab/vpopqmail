@@ -48,7 +48,7 @@
         
         <a  class="jsIconEdit cssIconEdit cssIcon" 
             <? if ($special->html('type') == MazelabVpopqmail_Model_SpecialsManager::MAILING_LIST): ?>
-                href="<?= $this->url(array($special->html('label')), 'MazelabVpopqmail_mailingList');?>"
+                href="<?= $this->url(array($special->html('label')), 'mazelab-vpopqmail_mailingList');?>"
             <? elseif ($special->html('type') == MazelabVpopqmail_Model_SpecialsManager::MAIL_ROBOT): ?>
                 href="<?= $this->url(array($special->html('label')), 'mazelab-vpopqmail_mailRobot');?>"
             <? endif; ?>

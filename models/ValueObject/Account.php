@@ -85,7 +85,7 @@ class MazelabVpopqmail_Model_ValueObject_Account
                 ->setAction(self::LOG_ACTION_ACCOUNT_CONFLICT)
                 ->setData($this->getConflicts())->setDomainRef($this->getDomain()->getId())
                 ->setModuleRef(MazelabVpopqmail_Model_ConfigManager::MODULE_NAME)
-                ->setRoute(array($this->getEmail()), 'MazelabVpopqmail_diffAccountDetail')
+                ->setRoute(array($this->getEmail()), 'mazelab-vpopqmail_diffAccountDetail')
                 ->setClientRef($this->getOwner()->getId())
                 ->saveByContext($this->getEmail());
     }
